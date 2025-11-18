@@ -1,2 +1,3 @@
 # TX-Unity-Kit
-A foundational collection of scripts, systems, and assets providing the core framework and essential components required by any Unity game project.
+A highly reusable and modular kit built for Unity projects.
+It provides the essential game core components, utilities, and base classes that form the backbone of virtually any game, saving development time and ensuring a solid foundation.

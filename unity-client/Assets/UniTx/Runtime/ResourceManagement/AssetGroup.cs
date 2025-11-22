@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UniTx.Runtime.ResourceLoading
+namespace UniTx.Runtime.ResourceManagement
 {
     /// <summary>
     /// Represents a disposable group of loaded Unity assets.

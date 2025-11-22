@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-namespace UniTx.Runtime.ResourceLoading
+namespace UniTx.Runtime.ResourceManagement
 {
     /// <summary>
     /// Defines a strategy for loading, creating, and disposing Unity assets and instances.

@@ -16,6 +16,11 @@ namespace UniTx.Runtime.Events
         }
 
         /// <summary>
+        /// Removes all subscriptions.
+        /// </summary>
+        public static void Reset() => _eventBus.Reset();
+
+        /// <summary>
         /// Subscribes a listener to an event type with an optional priority.
         /// </summary>
         /// <typeparam name="TEvent">The event type to subscribe to.</typeparam>

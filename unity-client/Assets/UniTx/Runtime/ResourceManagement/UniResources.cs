@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Threading;
 using UnityEngine;
 
-namespace UniTx.Runtime.ResourceLoading
+namespace UniTx.Runtime.ResourceManagement
 {
     /// <summary>
     /// Provides a unified API for loading, creating, and disposing Unity assets via a configured strategy.
     /// </summary>
-    public static class Resources
+    public static class UniResources
     {
         private static IResourceLoadingStrategy _strategy = null;
 
@@ -73,6 +73,6 @@ namespace UniTx.Runtime.ResourceLoading
         /// Unloads unused Unity assets asynchronously.
         /// </summary>
         public static UniTask UnloadUnusedAssets(CancellationToken cToken = default)
-            => UnityEngine.Resources.UnloadUnusedAssets().ToUniTask(cancellationToken: cToken);
+            => Resources.UnloadUnusedAssets().ToUniTask(cancellationToken: cToken);
     }
 }

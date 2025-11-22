@@ -8,7 +8,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UniTx.Runtime.Extensions;
 
-namespace UniTx.Runtime.ResourceLoading
+namespace UniTx.Runtime.ResourceManagement
 {
     internal sealed class AddressablesLoadingStrategy : IResourceLoadingStrategy
     {

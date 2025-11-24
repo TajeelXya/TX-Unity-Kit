@@ -17,7 +17,14 @@ namespace UniTx.Runtime.ResourceManagement
         public UniTask InitialiseAsync(CancellationToken cToken = default)
             => Addressables.InitializeAsync().ToUniTask(cToken: cToken);
 
-        public void Reset() => _lookup.Clear();
+        public void Reset()
+        {
+            foreach (var handle in _lookup.Values)
+            {
+                Addressables.Release(handle);
+            }
+            _lookup.Clear();
+        }
 
         public UniTask<TObject> LoadAssetAsync<TObject>(string key, IProgress<float> progress = null,
             CancellationToken cToken = default)
@@ -32,21 +39,21 @@ namespace UniTx.Runtime.ResourceManagement
             where TObject : UnityEngine.Object
             => Addressables.Release(asset);
 
-        public async UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> keys, IProgress<float> progress = null,
+        public async UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> labels, IProgress<float> progress = null,
             CancellationToken cToken = default)
             where TObject : UnityEngine.Object
         {
-            if (keys == null)
+            if (labels == null)
             {
-                throw new ArgumentNullException(nameof(keys));
+                throw new ArgumentNullException(nameof(labels));
             }
 
-            if (!keys.Any() || keys.Any(string.IsNullOrEmpty))
+            if (!labels.Any() || labels.Any(string.IsNullOrEmpty))
             {
-                throw new ArgumentException("One or more keys are null or empty.", nameof(keys));
+                throw new ArgumentException("One or more keys are null or empty.", nameof(labels));
             }
 
-            var handle = Addressables.LoadAssetsAsync<TObject>(keys, null, Addressables.MergeMode.Union);
+            var handle = Addressables.LoadAssetsAsync<TObject>(labels, null, Addressables.MergeMode.Union);
             var result = await handle.ToUniTask(progress, cToken: cToken);
             var assetGroup = new AssetGroup<TObject>(result);
             _lookup.Add(assetGroup.Guid, handle);
@@ -67,7 +74,7 @@ namespace UniTx.Runtime.ResourceManagement
                 return;
             }
 
-            Statics.LogInfo($"Trying to dispose an asset group <{assetGroup.Guid}> which is not being tracked.", this, Color.red);
+            UniStatics.LogInfo($"Trying to dispose an asset group <{assetGroup.Guid}> which is not being tracked.", this, Color.red);
         }
 
         public async UniTask<TComponent> CreateInstanceAsync<TComponent>(string key, Transform parent = null, IProgress<float> progress = null,
@@ -80,12 +87,9 @@ namespace UniTx.Runtime.ResourceManagement
 
             var instance = await Addressables.InstantiateAsync(key, parent).ToUniTask(progress, cToken: cToken);
 
-            if (!instance.TryGetComponent<TComponent>(out var component))
-            {
-                DisposeInstance(instance);
-            }
-
-            return component;
+            return instance.TryGetComponent<TComponent>(out var component)
+                ? component
+                : throw new MissingComponentException($"{typeof(TComponent).Name} not found on {instance.name}.");
         }
 
         public bool DisposeInstance(GameObject instance) => Addressables.ReleaseInstance(instance);

@@ -45,10 +45,10 @@ namespace UniTx.Runtime.ResourceManagement
         /// <summary>
         /// Loads a group of assets asynchronously.
         /// </summary>
-        public static UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> keys,
+        public static UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> labels,
             IProgress<float> progress = default, CancellationToken cToken = default)
             where TObject : UnityEngine.Object
-            => _strategy.LoadAssetGroupAsync<TObject>(keys, progress, cToken);
+            => _strategy.LoadAssetGroupAsync<TObject>(labels, progress, cToken);
 
         /// <summary>
         /// Disposes a previously loaded asset group.

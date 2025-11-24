@@ -37,6 +37,9 @@ namespace UniTx.Runtime.Widgets
             {
                 await PopWidgetsStackAsync(cToken);
             }
+            _assetData = null;
+            _parent = null;
+            _stack = null;
         }
 
         public UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)

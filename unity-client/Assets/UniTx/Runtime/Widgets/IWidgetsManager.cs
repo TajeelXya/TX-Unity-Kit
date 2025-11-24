@@ -5,7 +5,10 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Widgets
 {
-    internal interface IWidgetsManager : IInjectable, IInitialisableAsync, IResettableAsync
+    /// <summary>
+    /// Manages in-game UI widgets, including pushing, popping based on the provided database.
+    /// </summary>
+    internal interface IWidgetsManager : IInjectable, IInitialisableAsync
     {
         /// <summary>
         /// Triggered when a widget is pushed onto the stack.
@@ -30,12 +33,13 @@ namespace UniTx.Runtime.Widgets
             where TWidgetType : IWidget;
 
         /// <summary>
-        /// Asynchronously pops all widgets from the stack.
+        /// Asynchronously pops the widget from the stack.
         /// </summary>
         UniTask PopWidgetsStackAsync(CancellationToken cToken = default);
 
         /// <summary>
         /// Returns the widget currently at the top of the stack without removing it.
+        /// Returns null if the widgets stack is empty.
         /// </summary>
         IWidget Peek();
     }

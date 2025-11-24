@@ -13,19 +13,11 @@ namespace UniTx.Runtime.ResourceManagement
     {
         private static IResourceLoadingStrategy _strategy = null;
 
-        /// <summary>
-        /// Initialises the resource loading strategy asynchronously.
-        /// </summary>
         internal static UniTask InitialiseAsync(IResourceLoadingStrategy strategy, CancellationToken cToken = default)
         {
             _strategy = strategy ?? throw new ArgumentNullException(nameof(strategy));
             return _strategy.InitialiseAsync(cToken);
         }
-
-        /// <summary>
-        /// Resets the current resource loading strategy.
-        /// </summary>
-        internal static void Reset() => _strategy.Reset();
 
         /// <summary>
         /// Loads an asset asynchronously using the specified key.

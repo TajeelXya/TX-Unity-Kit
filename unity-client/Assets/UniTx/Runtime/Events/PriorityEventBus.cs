@@ -5,14 +5,8 @@ namespace UniTx.Runtime.Events
 {
     internal sealed class PriorityEventBus : IEventBus
     {
-        private IDictionary<Type, List<IListener>> _subscriptions;
-        private Comparer _comparer;
-
-        public void Initialise()
-        {
-            _subscriptions = new Dictionary<Type, List<IListener>>();
-            _comparer = new();
-        }
+        private readonly IDictionary<Type, List<IListener>> _subscriptions = new Dictionary<Type, List<IListener>>();
+        private readonly Comparer _comparer = new();
 
         public void Reset()
         {

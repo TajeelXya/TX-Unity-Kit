@@ -25,9 +25,9 @@ namespace UniTx.Runtime.ResourceManagement
             where TObject : UnityEngine.Object;
 
         /// <summary>
-        /// Loads a group of assets asynchronously using the provided keys.
+        /// Loads a group of assets asynchronously using the provided labels.
         /// </summary>
-        UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> keys, IProgress<float> progress = default,
+        UniTask<AssetGroup<TObject>> LoadAssetGroupAsync<TObject>(IEnumerable<string> labels, IProgress<float> progress = default,
             CancellationToken cToken = default)
             where TObject : UnityEngine.Object;
 

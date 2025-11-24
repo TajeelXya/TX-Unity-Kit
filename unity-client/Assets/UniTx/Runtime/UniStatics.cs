@@ -10,8 +10,12 @@ namespace UniTx.Runtime
     /// <summary>
     /// Provides common utility functions and platform checks.
     /// </summary>
-    public static class Statics
+    public static class UniStatics
     {
+        private static UniTxConfig _config;
+
+        internal static UniTxConfig Config => _config ??= Resources.Load<UniTxConfig>("Assets/Resources/UniTxConfig.asset");
+
         /// <summary>
         /// Indicates whether the application is running in the Unity Editor.
         /// </summary>

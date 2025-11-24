@@ -14,26 +14,43 @@ namespace UniTx.Runtime.Widgets
             return _widgetsManager.InitialiseAsync(cToken);
         }
 
-        internal static UniTask ResetAsync(CancellationToken cToken = default) => _widgetsManager.ResetAsync(cToken);
+        /// <summary>
+        /// Triggered when a widget is pushed onto the stack.
+        /// </summary>
+        public static event Action<Type> OnPush
+        {
+            add => _widgetsManager.OnPush += value;
+            remove => _widgetsManager.OnPush -= value;
+        }
 
         /// <summary>
-        /// Pushes a widget of the given type without data.
+        /// Triggered when a widget is popped from the stack.
         /// </summary>
-        public static void Push<TWidgetType>()
+        public static event Action<Type> OnPop
+        {
+            add => _widgetsManager.OnPop += value;
+            remove => _widgetsManager.OnPop -= value;
+        }
+
+        /// <summary>
+        /// Asynchronously pushes a widget of the given type without data.
+        /// </summary>
+        public static UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)
             where TWidgetType : IWidget
-            => _widgetsManager.PushAsync<TWidgetType>().Forget();
+            => _widgetsManager.PushAsync<TWidgetType>(cToken);
 
         /// <summary>
-        /// Pushes a widget of the given type with data.
+        /// Asynchronously pushes a widget of the given type with data.
         /// </summary>
-        public static void Push<TWidgetType>(IWidgetData widgetData)
+        public static UniTask PushAsync<TWidgetType>(IWidgetData widgetData, CancellationToken cToken = default)
             where TWidgetType : IWidget
-            => _widgetsManager.PushAsync<TWidgetType>(widgetData).Forget();
+            => _widgetsManager.PushAsync<TWidgetType>(widgetData, cToken);
 
         /// <summary>
-        /// Pops the widget from the stack.
+        /// Asynchronously pops the widget from the stack.
         /// </summary>
-        public static void PopWidgetsStack() => _widgetsManager.PopWidgetsStackAsync().Forget();
+        public static UniTask PopWidgetsStackAsync(CancellationToken cToken = default)
+            => _widgetsManager.PopWidgetsStackAsync(cToken);
 
         /// <summary>
         /// Returns the widget currently at the top of the stack without removing it.

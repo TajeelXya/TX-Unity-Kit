@@ -17,15 +17,6 @@ namespace UniTx.Runtime.ResourceManagement
         public UniTask InitialiseAsync(CancellationToken cToken = default)
             => Addressables.InitializeAsync().ToUniTask(cToken: cToken);
 
-        public void Reset()
-        {
-            foreach (var handle in _lookup.Values)
-            {
-                Addressables.Release(handle);
-            }
-            _lookup.Clear();
-        }
-
         public UniTask<TObject> LoadAssetAsync<TObject>(string key, IProgress<float> progress = null,
             CancellationToken cToken = default)
             where TObject : UnityEngine.Object
@@ -64,8 +55,6 @@ namespace UniTx.Runtime.ResourceManagement
         public void DisposeAssetGroup<TObject>(AssetGroup<TObject> assetGroup)
             where TObject : UnityEngine.Object
         {
-            if (assetGroup == null) return;
-
             if (_lookup.TryGetValue(assetGroup.Guid, out var handle))
             {
                 _lookup.Remove(assetGroup.Guid);
@@ -74,7 +63,7 @@ namespace UniTx.Runtime.ResourceManagement
                 return;
             }
 
-            UniStatics.LogInfo($"Trying to dispose an asset group <{assetGroup.Guid}> which is not being tracked.", this, Color.red);
+            throw new InvalidOperationException($"Trying to dispose an asset group <{assetGroup.Guid}> which is not being tracked.");
         }
 
         public async UniTask<TComponent> CreateInstanceAsync<TComponent>(string key, Transform parent = null, IProgress<float> progress = null,

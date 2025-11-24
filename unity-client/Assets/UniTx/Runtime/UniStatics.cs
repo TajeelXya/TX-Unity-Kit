@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
 using UniTx.Runtime.Extensions;
+using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime
 {
@@ -12,9 +13,10 @@ namespace UniTx.Runtime
     /// </summary>
     public static class UniStatics
     {
-        private static UniTxConfig _config;
-
-        internal static UniTxConfig Config => _config ??= Resources.Load<UniTxConfig>("Assets/Resources/UniTxConfig.asset");
+        /// <summary>
+        /// Gets the resolver instance that is bound in the container, used to resolve dependencies at runtime.
+        /// </summary>
+        public static IResolver Resolver { get; internal set; }
 
         /// <summary>
         /// Indicates whether the application is running in the Unity Editor.

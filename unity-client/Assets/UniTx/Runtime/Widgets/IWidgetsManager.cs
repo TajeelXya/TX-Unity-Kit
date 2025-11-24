@@ -8,7 +8,7 @@ namespace UniTx.Runtime.Widgets
     /// <summary>
     /// Manages in-game UI widgets, including pushing, popping based on the provided database.
     /// </summary>
-    internal interface IWidgetsManager : IInjectable, IInitialisableAsync, IResettableAsync
+    internal interface IWidgetsManager : IInjectable, IInitialisableAsync
     {
         /// <summary>
         /// Triggered when a widget is pushed onto the stack.

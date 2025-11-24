@@ -13,21 +13,20 @@ namespace UniTx.Runtime.Widgets
     internal sealed class UniWidgetsManager : IWidgetsManager
     {
         private static readonly SemaphoreSlim _semaphore = new(1, 1);
-        private readonly Stack<IWidget> _stack = new();
-        private AssetData _assetData;
-        private Transform _parent;
-        private IResolver _resolver;
+        private readonly Stack<IWidget> _stack;
+        private readonly AssetData _assetData;
+        private readonly Transform _parent;
+        private readonly IResolver _resolver;
 
         public event Action<Type> OnPush;
         public event Action<Type> OnPop;
 
-        public void Inject(IResolver resolver) => _resolver = resolver;
-
-        public async UniTask InitialiseAsync(CancellationToken cToken = default)
+        public UniWidgetsManager(AssetData assetData, Transform parent)
         {
-            var config = UniTx.Config;
-            _assetData = await UniResources.LoadAssetAsync<AssetData>(config.WidgetsAssetDataKey, null, cToken);
-            _parent = GameObject.FindGameObjectWithTag(config.WidgetsParentTag).transform;
+            _assetData = assetData;
+            _parent = parent;
+            _stack = new();
+            _resolver = UniStatics.Resolver;
         }
 
         public UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)

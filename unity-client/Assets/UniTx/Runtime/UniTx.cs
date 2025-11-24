@@ -3,6 +3,7 @@ using System.Threading;
 using Unity;
 using UniTx.Runtime.IoC;
 using UnityEngine;
+using UniTx.Runtime.Database;
 using UniTx.Runtime.Events;
 using UniTx.Runtime.ResourceManagement;
 using UniTx.Runtime.Widgets;
@@ -15,6 +16,9 @@ namespace UniTx.Runtime
 
         internal static UniTxConfig Config { get; private set; }
 
+        /// <summary>
+        /// Initialises the package asynchronously.
+        /// </summary>
         public static async UniTask InitialiseAsync(CancellationToken cToken = default)
         {
             if (_initialised) return;
@@ -23,7 +27,7 @@ namespace UniTx.Runtime
             SetupIoC();
             UniEventBus.SetEventBus(new PriorityEventBus());
             await UniResources.InitialiseAsync(new AddressablesLoadingStrategy(), cToken);
-            await UniWidgets.InitialiseAsync(new UniWidgetsManager(), cToken);
+            await LoadUniWidgetsDependenciesAsync(cToken);
 
             _initialised = true;
         }
@@ -37,6 +41,13 @@ namespace UniTx.Runtime
             var binder = new UniBinder(container);
             binder.BindAsSingleton(resolver);
             UniStatics.Resolver = container.Resolve<IResolver>(); // ensure resolve from container.
+        }
+
+        private static async UniTask LoadUniWidgetsDependenciesAsync(CancellationToken cToken = default)
+        {
+            var assetData = await UniResources.LoadAssetAsync<AssetData>(Config.WidgetsAssetDataKey, cToken: cToken);
+            var parent = GameObject.FindGameObjectWithTag(Config.WidgetsParentTag).transform;
+            UniWidgets.SetWidgetsManager(new UniWidgetsManager(assetData, parent));
         }
     }
 }

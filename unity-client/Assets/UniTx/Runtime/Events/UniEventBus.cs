@@ -9,7 +9,8 @@ namespace UniTx.Runtime.Events
     {
         private static IEventBus _eventBus = null;
 
-        internal static void SetEventBus(IEventBus eventBus) => _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        internal static void SetEventBus(IEventBus eventBus)
+            => _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
 
         /// <summary>
         /// Removes all subscriptions.

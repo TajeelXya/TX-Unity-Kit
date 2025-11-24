@@ -1,14 +1,13 @@
 using Cysharp.Threading.Tasks;
 using System;
 using System.Threading;
-using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Widgets
 {
     /// <summary>
     /// Manages in-game UI widgets, including pushing, popping based on the provided database.
     /// </summary>
-    internal interface IWidgetsManager : IInjectable, IInitialisableAsync
+    internal interface IWidgetsManager
     {
         /// <summary>
         /// Triggered when a widget is pushed onto the stack.

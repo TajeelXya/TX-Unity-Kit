@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using DG.Tweening;
 using System;
 using System.Threading;
 using UnityEngine;
@@ -11,19 +12,19 @@ namespace UniTx.Runtime.Services
         private const float SaveInterval = 5f;
         private readonly Serialiser _serialiser = new();
 
-        // private Tween _saveTween;
+        private Tween _saveTween;
 
         public void Inject(IResolver resolver) => _serialiser.Inject(resolver);
 
         public UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            // _saveTween = DOVirtual.DelayedCall(SaveInterval, _serializer.SerialiseDirty, false).SetLoops(-1);
+            _saveTween = DOVirtual.DelayedCall(SaveInterval, _serialiser.SerialiseDirty, false).SetLoops(-1);
             return UniTask.CompletedTask;
         }
 
         public void Reset()
         {
-            // _saveTween?.Kill();
+            _saveTween?.Kill();
             _serialiser.Reset();
         }
 

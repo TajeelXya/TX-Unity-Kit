@@ -7,7 +7,7 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Services
 {
-    public class SerialisationService : IService, ISerialisationService
+    public class SerialisationService : IService, ISerialisationService, IInjectable
     {
         private const float SaveInterval = 5f;
         private readonly Serialiser _serialiser = new();

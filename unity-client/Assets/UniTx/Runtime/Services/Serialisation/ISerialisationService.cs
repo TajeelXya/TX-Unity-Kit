@@ -27,6 +27,7 @@ namespace UniTx.Runtime.Services
         /// An instance of <typeparamref name="T"/> loaded from storage,  
         /// or a new instance if no saved data with the given <paramref name="id"/> exists.
         /// </returns>
-        T Load<T>(string id) where T : ISavedData, new();
+        T Load<T>(string id)
+            where T : ISavedData, new();
     }
 }

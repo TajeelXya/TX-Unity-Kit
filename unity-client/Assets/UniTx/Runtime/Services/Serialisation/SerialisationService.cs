@@ -39,7 +39,8 @@ namespace UniTx.Runtime.Services
             _serialiser.MarkDirty(data);
         }
 
-        public T Load<T>(string id) where T : ISavedData, new()
+        public T Load<T>(string id)
+            where T : ISavedData, new()
         {
             if (id == null)
             {

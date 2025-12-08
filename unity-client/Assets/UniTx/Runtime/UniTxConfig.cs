@@ -9,8 +9,10 @@ namespace UniTx.Runtime
     {
         [SerializeField] private string _widgetsAssetDataKey = default;
         [SerializeField] private string _widgetsParentTag = default;
+        [SerializeField] private string _timeServerUrl = default;
 
         public string WidgetsAssetDataKey => _widgetsAssetDataKey;
         public string WidgetsParentTag => _widgetsParentTag;
+        public string TimeServerUrl => _timeServerUrl;
     }
 }

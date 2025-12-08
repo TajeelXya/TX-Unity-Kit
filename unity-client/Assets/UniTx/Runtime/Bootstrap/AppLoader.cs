@@ -8,7 +8,7 @@ namespace UniTx.Runtime.Bootstrap
 {
     internal sealed class AppLoader : MonoBehaviour
     {
-        [SerializeField] private List<UniLoadingStep> _loadingSteps = default;
+        [SerializeField] private List<LoadingStepBase> _loadingSteps = default;
 
         private void Start() => UniTask.Void(StartAsync, this.GetCancellationTokenOnDestroy());
 

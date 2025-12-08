@@ -9,8 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6edbbe6c153027c4a86f571db30521a7, type: 3}
-  m_Name: UniTxConfig
-  m_EditorClassIdentifier: UniTx.Runtime::UniTx.Runtime.UniTxConfig
-  _widgetsAssetDataKey: WidgetAssetData
-  _widgetsParentTag: WidgetsParent
+  m_Script: {fileID: 11500000, guid: 040bc25f95706694ea25a65099934e29, type: 3}
+  m_Name: WidgetAssetData
+  m_EditorClassIdentifier: UniTx.Runtime::UniTx.Runtime.Database.AssetData
+  _id: widget-asset-data
+  _assets: []

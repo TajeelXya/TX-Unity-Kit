@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: AssetGroup - Widgets
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: AssetGroup - Widgets
+  m_GUID: c4dadad7d1c4bda4a9ceb32213527efd
+  m_SerializeEntries:
+  - m_GUID: cc8f32dca926a77409ade0bab18ef37a
+    m_Address: WidgetAssetData
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - AssetData
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: c3090477ab66cc84eacaafc57e8a1e47, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: d42ddbd7620862742b7b9772992cddac, type: 2}
+    - {fileID: 11400000, guid: 75f3046e0946c054d8ce56a6f2dad379, type: 2}

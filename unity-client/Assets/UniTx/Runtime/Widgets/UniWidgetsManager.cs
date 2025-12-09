@@ -15,18 +15,18 @@ namespace UniTx.Runtime.Widgets
         private static readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly Stack<IWidget> _stack;
         private readonly AssetData _assetData;
-        private readonly Transform _parent;
         private readonly IResolver _resolver;
+        private Transform _spawnPoint;
 
         public event Action<Type> OnPush;
         public event Action<Type> OnPop;
 
-        public UniWidgetsManager(AssetData assetData, Transform parent)
+        public UniWidgetsManager(AssetData assetData)
         {
             _assetData = assetData;
-            _parent = parent;
             _stack = new();
             _resolver = UniStatics.Resolver;
+            _spawnPoint = null;
         }
 
         public UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)
@@ -41,7 +41,7 @@ namespace UniTx.Runtime.Widgets
             {
                 var widgetType = typeof(TWidgetType);
                 var asset = _assetData.GetAsset(widgetType.Name);
-                var widget = await UniResources.CreateInstanceAsync<IWidget>(asset.RuntimeKey, _parent, null, cToken);
+                var widget = await UniResources.CreateInstanceAsync<IWidget>(asset.RuntimeKey, GetSpawnPoint(), null, cToken);
                 _stack.Push(widget);
 
                 if (widget is IWidgetDataReceiver dataReceiver)
@@ -85,5 +85,20 @@ namespace UniTx.Runtime.Widgets
         }
 
         public IWidget Peek() => _stack.TryPeek(out var widget) ? widget : null;
+
+        private Transform GetSpawnPoint()
+        {
+            if (_spawnPoint != null) return _spawnPoint;
+
+            var parentTag = UniTx.Config.WidgetsParentTag;
+            var go = GameObject.FindGameObjectWithTag(parentTag);
+            if (go == null)
+            {
+                UniStatics.LogInfo($"No GameObject found with tag '{parentTag}' to serve as widgets parent.", this, Color.red);
+                return null;
+            }
+
+            return _spawnPoint = go.transform;
+        }
     }
 }

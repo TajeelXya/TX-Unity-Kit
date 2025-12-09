@@ -46,8 +46,7 @@ namespace UniTx.Runtime
         private static async UniTask LoadUniWidgetsDependenciesAsync(CancellationToken cToken = default)
         {
             var assetData = await UniResources.LoadAssetAsync<AssetData>(Config.WidgetsAssetDataKey, cToken: cToken);
-            var parent = GameObject.FindGameObjectWithTag(Config.WidgetsParentTag).transform;
-            UniWidgets.SetWidgetsManager(new UniWidgetsManager(assetData, parent));
+            UniWidgets.SetWidgetsManager(new UniWidgetsManager(assetData));
         }
     }
 }

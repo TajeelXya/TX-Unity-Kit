@@ -1,6 +1,8 @@
+using UniTx.Runtime.Content;
 using UniTx.Runtime.IoC;
+using UniTx.Runtime.Serialisation;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Entity
 {
     public abstract class EntityBase<TData, TSavedData> : IEntity
          where TData : class, IEntityData

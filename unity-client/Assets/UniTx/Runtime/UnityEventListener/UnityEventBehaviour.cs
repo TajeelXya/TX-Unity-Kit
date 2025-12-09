@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.UnityEventListener
 {
     internal sealed class UnityEventBehaviour : MonoBehaviour
     {

@@ -1,6 +1,6 @@
 using System;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Content
 {
     /// <summary>
     /// Base interface for data objects that can be retrieved from data services.

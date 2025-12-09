@@ -1,4 +1,4 @@
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Serialisation
 {
     /// <summary>
     /// Represents a persistable data object with an identifier and modified timestamp.

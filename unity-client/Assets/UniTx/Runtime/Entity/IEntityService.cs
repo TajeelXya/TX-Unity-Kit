@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Entity
 {
     /// <summary>
     /// Service for retrieving entity instances by id or type.

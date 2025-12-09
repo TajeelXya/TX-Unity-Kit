@@ -1,12 +1,10 @@
-using Cysharp.Threading.Tasks;
 using System;
-using System.Threading;
 using UniTx.Runtime.Extensions;
 using UnityEngine;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.UnityEventListener
 {
-    public sealed class UnityEventListener : IService, IUnityEventListener
+    public sealed class UnityEventListener : IUnityEventListener, IInitialisable, IResettable
     {
         private UnityEventBehaviour _behaviour;
 
@@ -16,12 +14,11 @@ namespace UniTx.Runtime.Services
         public event Action<bool> OnPause;
         public event Action OnQuit;
 
-        public UniTask InitialiseAsync(CancellationToken cToken = default)
+        public void Initialise()
         {
             var go = new GameObject("UnityEventBehaviour");
             _behaviour = go.AddComponent<UnityEventBehaviour>();
             _behaviour.SetListener(this);
-            return UniTask.CompletedTask;
         }
 
         public void Reset()

@@ -1,39 +1,41 @@
 using Cysharp.Threading.Tasks;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using UniTx.Runtime;
 using UniTx.Runtime.Bootstrap;
 using UniTx.Runtime.IoC;
-using UniTx.Runtime.Services;
 
 namespace Client.Runtime
 {
     public sealed class InitDependenciesStep : LoadingStepBase, IInjectable
     {
-        private IResolver _resolver;
+        private IEnumerable<IInitialisable> _initialisables;
+        private IEnumerable<IInitialisableAsync> _initialisablesAsync;
 
-        public void Inject(IResolver resolver) => _resolver = resolver;
+        public void Inject(IResolver resolver)
+        {
+            var injectables = resolver.ResolveAll<IInjectable>();
+            foreach (var injectable in injectables)
+            {
+                injectable.Inject(resolver);
+            }
+            _initialisables = resolver.ResolveAll<IInitialisable>();
+            _initialisablesAsync = resolver.ResolveAll<IInitialisableAsync>();
+        }
 
         public async override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            var services = _resolver.ResolveAll<IService>().ToArray();
-
-            var len = services.Length;
-            for (var i = 0; i < len; i++)
+            foreach (var initialisable in _initialisables)
             {
-                var service = services[i];
-
-                UniStatics.LogInfo($"Initialising ({i + 1}/{len}): concrete<{service.GetType().Name}>", this);
-
-                if (service is IInjectable injectable)
-                {
-                    injectable.Inject(_resolver);
-                }
-
-                await service.InitialiseAsync(cToken);
+                UniStatics.LogInfo($"Initialising: concrete<{initialisable.GetType().Name}>", this);
+                initialisable.Initialise();
             }
 
-            UniStatics.LogInfo("Services initialised.", this);
+            foreach (var initialisable in _initialisablesAsync)
+            {
+                UniStatics.LogInfo($"Initialising: concrete<{initialisable.GetType().Name}>", this);
+                await initialisable.InitialiseAsync(cToken);
+            }
         }
     }
 }

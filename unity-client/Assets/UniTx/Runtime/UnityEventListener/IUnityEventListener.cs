@@ -1,6 +1,6 @@
 using System;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.UnityEventListener
 {
     /// <summary>
     /// Listener for common Unity lifecycle events (Update, LateUpdate, Pause, Quit).

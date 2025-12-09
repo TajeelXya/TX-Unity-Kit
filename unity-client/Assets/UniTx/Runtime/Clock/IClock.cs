@@ -1,6 +1,6 @@
 using System;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Clock
 {
     /// <summary>
     /// Provides access to the current time in different formats.

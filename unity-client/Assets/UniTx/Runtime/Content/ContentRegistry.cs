@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Content
 {
     public static class ContentRegistry
     {

@@ -1,4 +1,4 @@
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Serialisation
 {
     /// <summary>
     /// Saves and loads <see cref="ISavedData"/> instances to persistent storage.

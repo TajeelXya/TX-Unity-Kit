@@ -1,30 +1,27 @@
-using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using System;
-using System.Threading;
 using UnityEngine;
 using UniTx.Runtime.IoC;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Serialisation
 {
-    public class SerialisationService : IService, ISerialisationService, IInjectable
+    public class SerialisationService : ISerialisationService, IInjectable, IInitialisable, IResettable
     {
-        private const float SaveInterval = 5f;
         private readonly Serialiser _serialiser = new();
 
         private Tween _saveTween;
 
         public void Inject(IResolver resolver) => _serialiser.Inject(resolver);
 
-        public UniTask InitialiseAsync(CancellationToken cToken = default)
+        public void Initialise()
         {
-            _saveTween = DOVirtual.DelayedCall(SaveInterval, _serialiser.SerialiseDirty, false).SetLoops(-1);
-            return UniTask.CompletedTask;
+            var interval = UNITX.Config.SaveInterval;
+            _saveTween = DOVirtual.DelayedCall(interval, _serialiser.SerialiseDirty, false).SetLoops(-1);
         }
 
         public void Reset()
         {
-            _saveTween?.Kill();
+            _saveTween.Kill();
             _serialiser.Reset();
         }
 

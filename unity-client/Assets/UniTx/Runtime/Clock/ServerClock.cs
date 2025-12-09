@@ -5,10 +5,11 @@ using UnityEngine;
 using UnityEngine.Networking;
 using UniTx.Runtime.Extensions;
 using UniTx.Runtime.IoC;
+using UniTx.Runtime.UnityEventListener;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Clock
 {
-    public sealed class ServerClock : IService, IClock, IInjectable
+    public sealed class ServerClock : IClock, IInjectable, IInitialisableAsync, IResettable
     {
         private DateTime _retrievedTime;
         private double _realTimeWhenRetrieved;
@@ -30,11 +31,7 @@ namespace UniTx.Runtime.Services
 
         public void Reset()
         {
-            if (_listener != null)
-            {
-                _listener.OnUpdate -= OnUpdate;
-            }
-
+            _listener.OnUpdate -= OnUpdate;
             _retrievedTime = default;
             _realTimeWhenRetrieved = 0;
         }

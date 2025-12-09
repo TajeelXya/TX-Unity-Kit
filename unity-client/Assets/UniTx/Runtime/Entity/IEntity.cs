@@ -1,6 +1,6 @@
 using UniTx.Runtime.IoC;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Entity
 {
     /// <summary>
     /// Runtime entity contract with lifecycle and persistence support.

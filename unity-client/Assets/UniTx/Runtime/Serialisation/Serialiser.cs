@@ -1,20 +1,19 @@
-using Cysharp.Threading.Tasks;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using UnityEditor;
 using UnityEngine;
+using UniTx.Runtime.Clock;
 using UniTx.Runtime.IoC;
 
-namespace UniTx.Runtime.Services
+namespace UniTx.Runtime.Serialisation
 {
     internal sealed class Serialiser : IInjectable, IResettable
     {
         private static string _dirPath = Path.Combine(Application.persistentDataPath, "Saves");
-        private readonly Dictionary<string, ISavedData> _cache = new();
-        private readonly Dictionary<string, ISavedData> _dirty = new();
+        private readonly IDictionary<string, ISavedData> _cache = new Dictionary<string, ISavedData>();
+        private readonly IDictionary<string, ISavedData> _dirty = new Dictionary<string, ISavedData>();
         private IClock _clock;
 
         public void Inject(IResolver resolver) => _clock = resolver.Resolve<IClock>();
@@ -35,7 +34,6 @@ namespace UniTx.Runtime.Services
             _dirty.Clear();
 
             SyncLocally(data);
-            SyncToCloudAsync(data);
         }
 
         public T Deserialise<T>(string id) where T : ISavedData, new()
@@ -68,12 +66,6 @@ namespace UniTx.Runtime.Services
                 var path = Path.Combine(_dirPath, $"{savedData.Id}.json");
                 File.WriteAllText(path, json);
             }
-        }
-
-        private UniTask SyncToCloudAsync(ISavedData[] data, CancellationToken cToken = default)
-        {
-            // Empty Yet.
-            return UniTask.CompletedTask;
         }
 
 #if UNITY_EDITOR

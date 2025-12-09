@@ -17,49 +17,11 @@ namespace UniTx.Runtime.Content
 
         public event Action OnContentUnloaded;
 
-        public async UniTask LoadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
-        {
-            var files = await UniResources.LoadAssetGroupAsync<TextAsset>(tags);
+        public UniTask LoadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
+            => ProcessContentAsync(tags, new LoadStrategy(_dataRegistry), OnContentLoaded, cToken);
 
-            foreach (var file in files)
-            {
-                var objs = GetDataObjects(file);
-
-                foreach (var obj in objs)
-                {
-                    if (!_dataRegistry.TryAdd(obj.Id, obj))
-                    {
-                        UniStatics.LogInfo(
-                            $"Duplicate Id '{obj.Id}' found, conflicts with an already registered data. Please ensure all Ids are unique.",
-                            this, Color.red);
-                    }
-                }
-            }
-
-            UniResources.DisposeAssetGroup(files);
-            OnContentLoaded.Broadcast();
-        }
-
-        public async UniTask UnloadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
-        {
-            var files = await UniResources.LoadAssetGroupAsync<TextAsset>(tags);
-
-            foreach (var file in files)
-            {
-                var objs = GetDataObjects(file);
-
-                foreach (var obj in objs)
-                {
-                    if (!_dataRegistry.Remove(obj.Id))
-                    {
-                        UniStatics.LogInfo($"Attempting to remove un-registered data '{obj.Id}', skipping.", this, Color.red);
-                    }
-                }
-            }
-
-            UniResources.DisposeAssetGroup(files);
-            OnContentUnloaded.Broadcast();
-        }
+        public UniTask UnloadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
+            => ProcessContentAsync(tags, new UnloadStrategy(_dataRegistry), OnContentUnloaded, cToken);
 
         public T GetData<T>(string key)
             where T : IData
@@ -79,6 +41,25 @@ namespace UniTx.Runtime.Content
         public IEnumerable<T> GetAllData<T>()
             where T : IData
             => _dataRegistry.Values.OfType<T>();
+
+        private async UniTask ProcessContentAsync(IEnumerable<string> tags, IProcessStrategy strategy, Action onComplete,
+            CancellationToken cToken = default)
+        {
+            var files = await UniResources.LoadAssetGroupAsync<TextAsset>(tags, cToken: cToken);
+
+            foreach (var file in files)
+            {
+                var objs = GetDataObjects(file);
+
+                foreach (var obj in objs)
+                {
+                    strategy.Process(obj);
+                }
+            }
+
+            UniResources.DisposeAssetGroup(files);
+            onComplete.Broadcast();
+        }
 
         private IEnumerable<IData> GetDataObjects(TextAsset file)
         {

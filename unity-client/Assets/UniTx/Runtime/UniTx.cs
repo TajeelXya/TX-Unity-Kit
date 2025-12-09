@@ -10,7 +10,7 @@ using UniTx.Runtime.Widgets;
 
 namespace UniTx.Runtime
 {
-    public static class UniTx
+    public static class UNITX
     {
         private static bool _initialised = false;
 

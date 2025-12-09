@@ -90,7 +90,7 @@ namespace UniTx.Runtime.Widgets
         {
             if (_spawnPoint != null) return _spawnPoint;
 
-            var parentTag = UniTx.Config.WidgetsParentTag;
+            var parentTag = UNITX.Config.WidgetsParentTag;
             var go = GameObject.FindGameObjectWithTag(parentTag);
             if (go == null)
             {

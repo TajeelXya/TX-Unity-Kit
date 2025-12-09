@@ -1,0 +1,25 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
+using UniTx.Runtime.Bootstrap;
+using UniTx.Runtime.IoC;
+using UniTx.Runtime.Services;
+
+namespace Client.Runtime
+{
+    public sealed class BindDependenciesStep : LoadingStepBase, IInjectable
+    {
+        private IBinder _binder;
+
+        public void Inject(IResolver resolver) => _binder = resolver.Resolve<IBinder>();
+
+        public override UniTask InitialiseAsync(CancellationToken cToken = default)
+        {
+            _binder.BindAsSingleton<LocalClock>(); // replace with server clock for prod
+            _binder.BindAsSingleton<UnityEventListener>();
+            _binder.BindAsSingleton<ContentService>();
+            _binder.BindAsSingleton<SerialisationService>();
+            _binder.BindAsSingleton<EntityService>();
+            return UniTask.CompletedTask;
+        }
+    }
+}

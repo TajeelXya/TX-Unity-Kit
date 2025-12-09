@@ -103,6 +103,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - AssetData
+    - mg_content
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: 1c80972665bc91f49b1f9003c9b5db39, type: 2}

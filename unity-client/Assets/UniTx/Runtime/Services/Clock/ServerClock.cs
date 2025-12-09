@@ -23,7 +23,7 @@ namespace UniTx.Runtime.Services
 
         public async UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            _timeServerUrl = UniTx.Config.TimeServerUrl;
+            _timeServerUrl = UNITX.Config.TimeServerUrl;
             await SetUtcAsync(cToken);
             _listener.OnUpdate += OnUpdate;
         }

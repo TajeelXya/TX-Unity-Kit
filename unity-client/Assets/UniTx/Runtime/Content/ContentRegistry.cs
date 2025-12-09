@@ -1,19 +1,16 @@
-using System;
 using System.Collections.Generic;
 
 namespace UniTx.Runtime.Content
 {
     public static class ContentRegistry
     {
-        private static readonly Dictionary<string, Type> _registry = new();
-
-        public static void Clear() => _registry.Clear();
+        private static readonly Dictionary<string, IDataLoader> _loaders = new();
 
         public static void Register<T>(string fileName)
-            where T : class
-            => _registry[fileName] = typeof(T);
+            where T : IData
+            => _loaders[fileName] = new DataLoader<T>();
 
-        public static Type GetCotentType(string fileName)
-            => _registry.TryGetValue(fileName, out var array) ? array : null;
+        internal static IDataLoader GetLoader(string fileName)
+            => _loaders.TryGetValue(fileName, out var loader) ? loader : null;
     }
 }

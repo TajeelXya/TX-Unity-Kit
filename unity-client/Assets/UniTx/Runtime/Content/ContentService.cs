@@ -64,20 +64,16 @@ namespace UniTx.Runtime.Content
         private IEnumerable<IData> GetDataObjects(TextAsset file)
         {
             var fileName = file.name.FixTurkishChars();
-            var type = ContentRegistry.GetCotentType(fileName);
+            var loader = ContentRegistry.GetLoader(fileName);
 
-            if (type == null)
+            if (loader == null)
             {
                 UniStatics.LogInfo($"File '{fileName}' not registered against any Type, skipping.", this, Color.yellow);
                 return Enumerable.Empty<IData>();
             }
 
-            var wrapperType = typeof(JsonArray<>).MakeGenericType(type);
             var wrappedJson = $"{{ \"Items\": {file.text.FixTurkishChars()} }}";
-
-            return JsonUtility.FromJson(wrappedJson, wrapperType) is { } wrapper
-                ? ((Array)wrapperType.GetField("Items").GetValue(wrapper)).OfType<IData>()
-                : Enumerable.Empty<IData>();
+            return loader.Load(wrappedJson);
         }
     }
 }

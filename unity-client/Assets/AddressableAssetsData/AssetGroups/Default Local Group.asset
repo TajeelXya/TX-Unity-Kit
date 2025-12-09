@@ -16,10 +16,16 @@ MonoBehaviour:
   m_GUID: ab7ac8438c0977c429daeafc5af9ab28
   m_SerializeEntries:
   - m_GUID: 3599f324cf2b58f45bc5f239dcf3cc88
-    m_Address: Content
+    m_Address: mg_content
     m_ReadOnly: 0
     m_SerializedLabels:
     - mg_content
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 97ad2bfe993adaf4e99b26caf97688db
+    m_Address: ev_content
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - ev_content
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: c3090477ab66cc84eacaafc57e8a1e47, type: 2}

@@ -48,7 +48,7 @@ namespace UniTx.Runtime.Pool
         {
             var item = _pool.Get();
 
-            if (item is IPoolItemDataReceiver dataReceiver && data != null)
+            if (item is IPoolItemDataReceiver dataReceiver)
             {
                 dataReceiver.SetData(data);
             }

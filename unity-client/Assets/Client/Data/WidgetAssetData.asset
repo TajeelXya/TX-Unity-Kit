@@ -13,4 +13,18 @@ MonoBehaviour:
   m_Name: WidgetAssetData
   m_EditorClassIdentifier: UniTx.Runtime::UniTx.Runtime.Database.AssetData
   _id: widget-asset-data
-  _assets: []
+  _assets:
+  - _key: DemoOneWidget
+    _reference:
+      m_AssetGUID: 68f34bf274b22b34fbfefbeb71a66062
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 0
+  - _key: DemoTwoWidget
+    _reference:
+      m_AssetGUID: 602820fbda1d2e047ab8623eb45cc36c
+      m_SubObjectName: 
+      m_SubObjectType: 
+      m_SubObjectGUID: 
+      m_EditorAssetChanged: 1

@@ -1,44 +1,50 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.Pool;
 using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Pool
 {
-    public abstract class SpawnerBase : MonoBehaviour, IInjectable, ISpawner
+    public sealed class UniSpawner : IInjectable, ISpawner
     {
-        protected IDictionary<int, IPoolItem> _activeItems;
-        protected IObjectPool<IPoolItem> _pool;
-        protected IResolver _resolver;
+        private readonly IDictionary<int, IPoolItem> _activeItems = new Dictionary<int, IPoolItem>();
+        private IObjectPool<IPoolItem> _pool;
+        private IResolver _resolver;
 
         public void Inject(IResolver resolver) => _resolver = resolver;
 
-        public virtual void Initialise(IPoolItem prefab, Transform parent, int initialCapacity)
+        public void Return(IPoolItem item)
+        {
+            _pool.Release(item);
+            _activeItems.Remove(item.GameObject.GetInstanceID());
+        }
+
+        public void SetPool(IPoolItem prefab, Transform parent, int initialCapacity)
         {
             _pool = new ObjectPool<IPoolItem>
             (
                 createFunc: CreateFunc(prefab, parent),
                 actionOnRelease: itm => itm.Reset(),
-                actionOnDestroy: itm => Destroy(itm.GameObject),
+                actionOnDestroy: itm => GameObject.Destroy(itm.GameObject),
                 defaultCapacity: initialCapacity
             );
-            _activeItems = new Dictionary<int, IPoolItem>();
         }
 
-        public virtual void ClearSpawns()
+        public void ClearSpawns()
         {
-            while (_activeItems.Count != 0)
+            while (_activeItems.Count > 0)
             {
-                _activeItems.First().Value.Return();
+                var enumerator = _activeItems.GetEnumerator();
+                enumerator.MoveNext();
+                enumerator.Current.Value.Return();
             }
 
             _pool.Clear();
             _activeItems.Clear();
         }
 
-        public virtual void SpawnOne(IPoolItemData data = null)
+        public void Spawn(IPoolItemData data = null)
         {
             var item = _pool.Get();
 
@@ -51,17 +57,11 @@ namespace UniTx.Runtime.Pool
             _activeItems.Add(item.GameObject.GetInstanceID(), item);
         }
 
-        public virtual void Return(IPoolItem item)
-        {
-            _pool.Release(item);
-            _activeItems.Remove(item.GameObject.GetInstanceID());
-        }
-
-        protected virtual Func<IPoolItem> CreateFunc(IPoolItem prefab, Transform parent)
+        private Func<IPoolItem> CreateFunc(IPoolItem prefab, Transform parent)
         {
             return () =>
             {
-                var go = Instantiate(prefab.GameObject, parent);
+                var go = GameObject.Instantiate(prefab.GameObject, parent);
                 var item = go.GetComponent<IPoolItem>();
                 item.SetSpawner(this);
 

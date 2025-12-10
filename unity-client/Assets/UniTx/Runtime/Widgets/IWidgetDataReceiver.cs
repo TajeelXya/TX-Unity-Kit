@@ -3,7 +3,7 @@ namespace UniTx.Runtime.Widgets
     /// <summary>
     /// Receives widget data and applies it to the widget.
     /// </summary>
-    internal interface IWidgetDataReceiver
+    public interface IWidgetDataReceiver
     {
         /// <summary>
         /// Sets or updates the data for this widget.

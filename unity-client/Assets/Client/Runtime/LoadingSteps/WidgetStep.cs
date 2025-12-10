@@ -12,11 +12,11 @@ namespace Client.Runtime
         public async override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
             await UniWidgets.PushAsync<DemoOneWidget>(cToken);
-            await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: cToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             await UniWidgets.PushAsync<DemoTwoWidget>(new DemoTwoWidgetData("Hello from UniTx."), cToken);
-            await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: cToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             await UniWidgets.PopWidgetsStackAsync(cToken);
-            await UniTask.Delay(TimeSpan.FromSeconds(5f), cancellationToken: cToken);
+            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             await UniWidgets.PopWidgetsStackAsync(cToken);
         }
     }

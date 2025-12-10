@@ -7,4 +7,10 @@ namespace UniTx.Runtime.Widgets
     {
         // Empty
     }
+
+    public interface IWidget<TData> : IWidget, IWidgetDataReceiver
+        where TData : IWidgetData
+    {
+        TData Data { get; }
+    }
 }

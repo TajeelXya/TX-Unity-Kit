@@ -4,14 +4,18 @@ using UnityEngine;
 
 namespace Client.Runtime.Widgets
 {
-    public sealed class DemoOneWidget : UniWidgetBase
+    public sealed class DemoOneWidget : MonoBehaviour, IWidget
     {
-        public override void Initialise()
+        public GameObject GameObject => gameObject;
+
+        public Transform Transform => transform;
+
+        public void Initialise()
         {
             UniStatics.LogInfo("Initialise", this, Color.ivory);
         }
 
-        public override void Reset()
+        public void Reset()
         {
             UniStatics.LogInfo("Reset", this, Color.ivory);
         }

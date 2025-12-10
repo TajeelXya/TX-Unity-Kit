@@ -1,6 +1,6 @@
 namespace UniTx.Runtime.Pool
 {
-    public interface IPoolItem : ISceneEntity, IInitialisable, IResettable
+    public interface IPoolItem : IInitialisable, IResettable, ISceneEntity
     {
         void SetSpawner(ISpawner spawner);
 

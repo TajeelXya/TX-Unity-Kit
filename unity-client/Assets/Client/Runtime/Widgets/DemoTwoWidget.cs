@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Client.Runtime.Widgets
 {
-    public sealed class DemoTwoWidget : UniWidgetBase<DemoTwoWidgetData>, IInjectable
+    public sealed class DemoTwoWidget : UniWidgetBase<IDemoTwoWidgetData>, IInjectable
     {
         public void Inject(IResolver resolver)
         {

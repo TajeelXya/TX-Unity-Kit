@@ -1,14 +1,13 @@
-using UniTx.Runtime.Widgets;
-
 namespace Client.Runtime.Widgets
 {
-    public readonly struct DemoTwoWidgetData : IWidgetData
+    public readonly struct DemoTwoWidgetData : IDemoTwoWidgetData
     {
-        public readonly string Message;
-
+        private readonly string _message;
         public DemoTwoWidgetData(string message)
         {
-            Message = message;
+            _message = message;
         }
+
+        public string Message => _message;
     }
 }

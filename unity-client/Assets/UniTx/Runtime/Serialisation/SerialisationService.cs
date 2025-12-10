@@ -1,5 +1,6 @@
-using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace UniTx.Runtime.Serialisation
@@ -8,17 +9,20 @@ namespace UniTx.Runtime.Serialisation
     {
         private readonly Serialiser _serialiser = new();
 
-        private Tween _saveTween;
+        private CancellationTokenSource _cts;
+        private float _interval;
 
         public void Initialise()
         {
-            var interval = UniStatics.Config.SaveInterval;
-            _saveTween = DOVirtual.DelayedCall(interval, _serialiser.SerialiseDirty, false).SetLoops(-1);
+            _interval = UniStatics.Config.SaveInterval;
+            _cts = new CancellationTokenSource();
+            UniTask.Void(SaveLoopAsync, _cts.Token);
         }
 
         public void Reset()
         {
-            _saveTween.Kill();
+            _cts.Cancel();
+            _cts.Dispose();
             _serialiser.Reset();
         }
 
@@ -43,6 +47,15 @@ namespace UniTx.Runtime.Serialisation
             }
 
             return _serialiser.Deserialise<T>(id);
+        }
+
+        private async UniTaskVoid SaveLoopAsync(CancellationToken cToken = default)
+        {
+            while (!cToken.IsCancellationRequested)
+            {
+                await UniTask.Delay(TimeSpan.FromSeconds(_interval), cancellationToken: cToken);
+                _serialiser.SerialiseDirty();
+            }
         }
     }
 }

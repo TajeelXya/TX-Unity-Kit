@@ -14,7 +14,7 @@ namespace Client.Runtime.Widgets
 
         public override void Initialise()
         {
-            UniStatics.LogInfo($"Initialise -> Message: {WidgetData.Message}", this, Color.khaki);
+            UniStatics.LogInfo($"Initialise -> Message: {Data.Message}", this, Color.khaki);
         }
 
         public override void Reset()

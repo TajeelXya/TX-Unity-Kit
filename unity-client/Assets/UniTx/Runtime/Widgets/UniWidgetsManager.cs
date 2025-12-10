@@ -14,19 +14,24 @@ namespace UniTx.Runtime.Widgets
     {
         private static readonly SemaphoreSlim _semaphore = new(1, 1);
         private readonly Stack<IWidget> _stack;
-        private readonly AssetData _assetData;
         private readonly IResolver _resolver;
+        private AssetData _assetData;
         private Transform _spawnPoint;
 
         public event Action<Type> OnPush;
         public event Action<Type> OnPop;
 
-        public UniWidgetsManager(AssetData assetData)
+        public UniWidgetsManager()
         {
-            _assetData = assetData;
             _stack = new();
             _resolver = UniStatics.Resolver;
             _spawnPoint = null;
+        }
+
+        public async UniTask InitialiseAsync(CancellationToken cToken = default)
+        {
+            var key = UniStatics.Config.WidgetsAssetDataKey;
+            _assetData = await UniResources.LoadAssetAsync<AssetData>(key, cToken: cToken);
         }
 
         public UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)
@@ -90,7 +95,7 @@ namespace UniTx.Runtime.Widgets
         {
             if (_spawnPoint != null) return _spawnPoint;
 
-            var parentTag = UNITX.Config.WidgetsParentTag;
+            var parentTag = UniStatics.Config.WidgetsParentTag;
             var go = GameObject.FindGameObjectWithTag(parentTag);
             if (go == null)
             {

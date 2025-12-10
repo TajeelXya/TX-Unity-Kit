@@ -8,8 +8,11 @@ namespace UniTx.Runtime.Widgets
     {
         private static IWidgetsManager _widgetsManager = null;
 
-        internal static void SetWidgetsManager(IWidgetsManager widgetsManager)
-            => _widgetsManager = widgetsManager ?? throw new ArgumentNullException(nameof(widgetsManager));
+        internal static UniTask InitialiseAsync(IWidgetsManager widgetsManager, CancellationToken cToken = default)
+        {
+            _widgetsManager = widgetsManager ?? throw new ArgumentNullException(nameof(widgetsManager));
+            return _widgetsManager.InitialiseAsync(cToken);
+        }
 
         /// <summary>
         /// Triggered when a widget is pushed onto the stack.

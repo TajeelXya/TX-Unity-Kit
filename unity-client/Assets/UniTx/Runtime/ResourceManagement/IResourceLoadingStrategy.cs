@@ -9,7 +9,7 @@ namespace UniTx.Runtime.ResourceManagement
     /// <summary>
     /// Defines a strategy for loading, creating, and disposing Unity assets and instances.
     /// </summary>
-    internal interface IResourceLoadingStrategy : IInitialisableAsync
+    public interface IResourceLoadingStrategy : IInitialisableAsync
     {
         /// <summary>
         /// Loads an asset asynchronously using the specified key.

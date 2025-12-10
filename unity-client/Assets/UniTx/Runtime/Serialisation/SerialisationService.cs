@@ -15,7 +15,7 @@ namespace UniTx.Runtime.Serialisation
 
         public void Initialise()
         {
-            var interval = UNITX.Config.SaveInterval;
+            var interval = UniStatics.Config.SaveInterval;
             _saveTween = DOVirtual.DelayedCall(interval, _serialiser.SerialiseDirty, false).SetLoops(-1);
         }
 

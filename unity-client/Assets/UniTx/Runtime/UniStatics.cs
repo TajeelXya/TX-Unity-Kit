@@ -13,6 +13,8 @@ namespace UniTx.Runtime
     /// </summary>
     public static class UniStatics
     {
+        internal static UniTxConfig Config { get; set; }
+
         /// <summary>
         /// Gets the resolver instance that is bound in the container, used to resolve dependencies at runtime.
         /// </summary>

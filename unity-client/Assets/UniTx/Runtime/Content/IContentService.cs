@@ -1,7 +1,4 @@
-using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
-using System.Threading;
 
 namespace UniTx.Runtime.Content
 {
@@ -10,30 +7,6 @@ namespace UniTx.Runtime.Content
     /// </summary>
     public interface IContentService
     {
-        /// <summary>
-        /// Invoked when content has finished loading.
-        /// </summary>
-        event Action OnContentLoaded;
-
-        /// <summary>
-        /// Invoked when content has finished unloading.
-        /// </summary>
-        event Action OnContentUnloaded;
-
-        /// <summary>
-        /// Asynchronously loads all content associated with the given tags.
-        /// </summary>
-        /// <param name="tags">Tags used to determine which content to load.</param>
-        /// <param name="cToken">Token to cancel the load operation.</param>
-        UniTask LoadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default);
-
-        /// <summary>
-        /// Asynchronously unloads all content associated with the given tags.
-        /// </summary>
-        /// <param name="tags">Tags used to determine which content to load.</param>
-        /// <param name="cToken">Token to cancel the load operation.</param>
-        UniTask UnloadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default);
-
         /// <summary>
         /// Retrieves a single data object by its unique key.
         /// </summary>

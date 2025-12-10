@@ -5,7 +5,7 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Entity
 {
-    public sealed class EntityService : IEntityService, IInjectable, IInitialisable, IResettable
+    public sealed class EntityService : IEntityService, IEntityLoader, IInjectable
     {
         private readonly IDictionary<string, IEntity> _registry = new Dictionary<string, IEntity>();
 
@@ -18,16 +18,27 @@ namespace UniTx.Runtime.Entity
             _resolver = resolver;
         }
 
-        public void Initialise()
+        public void LoadEntities()
         {
-            _contentService.OnContentLoaded += LoadEntities;
-            _contentService.OnContentUnloaded += UnloadEntities;
+            var data = _contentService.GetAllData<IEntityData>();
+
+            foreach (var datum in data)
+            {
+                var entity = datum.CreateEntity();
+                entity.Inject(_resolver);
+                entity.Initialise();
+                _registry[entity.Id] = entity;
+            }
         }
 
-        public void Reset()
+        public void UnloadEntities()
         {
-            _contentService.OnContentLoaded -= LoadEntities;
-            _contentService.OnContentUnloaded -= UnloadEntities;
+            foreach (var entity in _registry.Values)
+            {
+                entity.Reset();
+            }
+
+            _registry.Clear();
         }
 
         public TEntity Get<TEntity>(string id)
@@ -44,28 +55,5 @@ namespace UniTx.Runtime.Entity
         public IEnumerable<TEntity> GetAll<TEntity>()
             where TEntity : IEntity
             => _registry.Values.OfType<TEntity>();
-
-        private void LoadEntities()
-        {
-            var data = _contentService.GetAllData<IEntityData>();
-
-            foreach (var datum in data)
-            {
-                var entity = datum.CreateEntity();
-                entity.Inject(_resolver);
-                entity.Initialise();
-                _registry[entity.Id] = entity;
-            }
-        }
-
-        private void UnloadEntities()
-        {
-            foreach (var entity in _registry.Values)
-            {
-                entity.Reset();
-            }
-
-            _registry.Clear();
-        }
     }
 }

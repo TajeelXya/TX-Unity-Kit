@@ -3,7 +3,7 @@ using Unity;
 
 namespace UniTx.Runtime.IoC
 {
-    public sealed class UniResolver : IResolver
+    internal sealed class UniResolver : IResolver
     {
         private readonly IUnityContainer _container;
 

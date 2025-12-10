@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,19 +8,15 @@ using UniTx.Runtime.ResourceManagement;
 
 namespace UniTx.Runtime.Content
 {
-    public sealed class ContentService : IContentService
+    public sealed class ContentService : IContentService, IContentLoader
     {
         private readonly IDictionary<string, IData> _dataRegistry = new Dictionary<string, IData>();
 
-        public event Action OnContentLoaded;
-
-        public event Action OnContentUnloaded;
-
         public UniTask LoadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
-            => ProcessContentAsync(tags, new LoadStrategy(_dataRegistry), OnContentLoaded, cToken);
+            => ProcessContentAsync(tags, new LoadStrategy(_dataRegistry), cToken);
 
         public UniTask UnloadContentAsync(IEnumerable<string> tags, CancellationToken cToken = default)
-            => ProcessContentAsync(tags, new UnloadStrategy(_dataRegistry), OnContentUnloaded, cToken);
+            => ProcessContentAsync(tags, new UnloadStrategy(_dataRegistry), cToken);
 
         public T GetData<T>(string key)
             where T : IData
@@ -42,7 +37,7 @@ namespace UniTx.Runtime.Content
             where T : IData
             => _dataRegistry.Values.OfType<T>();
 
-        private async UniTask ProcessContentAsync(IEnumerable<string> tags, IProcessStrategy strategy, Action onComplete,
+        private async UniTask ProcessContentAsync(IEnumerable<string> tags, IProcessStrategy strategy,
             CancellationToken cToken = default)
         {
             var files = await UniResources.LoadAssetGroupAsync<TextAsset>(tags, cToken: cToken);
@@ -58,7 +53,6 @@ namespace UniTx.Runtime.Content
             }
 
             UniResources.DisposeAssetGroup(files);
-            onComplete.Broadcast();
         }
 
         private IEnumerable<IData> GetDataObjects(TextAsset file)

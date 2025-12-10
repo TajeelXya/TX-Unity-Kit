@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace UniTx.Runtime.IoC
 {
-    public sealed class UniBinder : IBinder
+    internal sealed class UniBinder : IBinder
     {
         private readonly IUnityContainer _container;
 
@@ -14,11 +14,7 @@ namespace UniTx.Runtime.IoC
             // Empty
         }
 
-        public UniBinder(IUnityContainer container)
-        {
-            _container = container;
-            BindInternal(GetType(), this);
-        }
+        public UniBinder(IUnityContainer container) => _container = container;
 
         public void BindAsSingleton<TConcrete>(TConcrete instance = null)
             where TConcrete : class, new()
@@ -26,9 +22,9 @@ namespace UniTx.Runtime.IoC
 
         public void BindAsSingleton(Type type, object instance = null)
         {
-            if (type == null || !type.IsClass)
+            if (type == null)
             {
-                UniStatics.LogInfo("Type must be a non-null class type to bind.", this, Color.red);
+                UniStatics.LogInfo("Type must be a non-null type to bind.", this, Color.red);
                 return;
             }
 

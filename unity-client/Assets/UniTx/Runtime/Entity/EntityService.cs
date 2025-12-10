@@ -5,15 +5,16 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Entity
 {
-    public sealed class EntityService : IEntityService, IEntityLoader, IInjectable
+    public sealed class EntityService : IEntityService, IEntityLoader
     {
-        private readonly IDictionary<string, IEntity> _registry = new Dictionary<string, IEntity>();
+        private readonly IDictionary<string, IEntity> _registry;
+        private readonly IContentService _contentService;
+        private readonly IResolver _resolver;
 
-        private IContentService _contentService;
-        private IResolver _resolver;
-
-        public void Inject(IResolver resolver)
+        public EntityService()
         {
+            _registry = new Dictionary<string, IEntity>();
+            var resolver = UniStatics.Resolver;
             _contentService = resolver.Resolve<IContentService>();
             _resolver = resolver;
         }

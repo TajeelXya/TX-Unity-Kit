@@ -6,18 +6,16 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Pool
 {
-    public sealed class UniSpawner : IInjectable, ISpawner
+    public sealed class UniSpawner : ISpawner
     {
-        private readonly IDictionary<int, IPoolItem> _activeItems = new Dictionary<int, IPoolItem>();
+        private readonly IDictionary<int, IPoolItem> _activeItems;
+        private readonly IResolver _resolver;
         private IObjectPool<IPoolItem> _pool;
-        private IResolver _resolver;
 
-        public void Inject(IResolver resolver) => _resolver = resolver;
-
-        public void Return(IPoolItem item)
+        public UniSpawner()
         {
-            _pool.Release(item);
-            _activeItems.Remove(item.GameObject.GetInstanceID());
+            _activeItems = new Dictionary<int, IPoolItem>();
+            _resolver = UniStatics.Resolver;
         }
 
         public void SetPool(IPoolItem prefab, Transform parent, int initialCapacity)
@@ -29,6 +27,12 @@ namespace UniTx.Runtime.Pool
                 actionOnDestroy: itm => GameObject.Destroy(itm.GameObject),
                 defaultCapacity: initialCapacity
             );
+        }
+
+        public void Return(IPoolItem item)
+        {
+            _pool.Release(item);
+            _activeItems.Remove(item.GameObject.GetInstanceID());
         }
 
         public void ClearSpawns()

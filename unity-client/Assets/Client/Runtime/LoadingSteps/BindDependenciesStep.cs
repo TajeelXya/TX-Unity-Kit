@@ -18,8 +18,8 @@ namespace Client.Runtime
 
         public override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            _binder.BindAsSingleton<LocalClock>(); // replace with server clock for prod
             _binder.BindAsSingleton<UnityEventListener>();
+            _binder.BindAsSingleton<LocalClock>(); // replace with server clock for prod
             _binder.BindAsSingleton<ContentService>();
             _binder.BindAsSingleton<SerialisationService>();
             _binder.BindAsSingleton<EntityService>();

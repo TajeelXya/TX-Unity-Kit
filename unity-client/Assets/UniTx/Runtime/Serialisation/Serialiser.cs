@@ -5,18 +5,22 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UniTx.Runtime.Clock;
-using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Serialisation
 {
-    internal sealed class Serialiser : IInjectable, IResettable
+    internal sealed class Serialiser : IResettable
     {
         private static string _dirPath = Path.Combine(Application.persistentDataPath, "Saves");
-        private readonly IDictionary<string, ISavedData> _cache = new Dictionary<string, ISavedData>();
-        private readonly IDictionary<string, ISavedData> _dirty = new Dictionary<string, ISavedData>();
-        private IClock _clock;
+        private readonly IDictionary<string, ISavedData> _cache;
+        private readonly IDictionary<string, ISavedData> _dirty;
+        private readonly IClock _clock;
 
-        public void Inject(IResolver resolver) => _clock = resolver.Resolve<IClock>();
+        public Serialiser()
+        {
+            _cache = new Dictionary<string, ISavedData>();
+            _dirty = new Dictionary<string, ISavedData>();
+            _clock = UniStatics.Resolver.Resolve<IClock>();
+        }
 
         public void Reset()
         {

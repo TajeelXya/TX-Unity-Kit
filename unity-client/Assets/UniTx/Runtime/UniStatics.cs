@@ -18,7 +18,7 @@ namespace UniTx.Runtime
         /// <summary>
         /// Gets the resolver instance that is bound in the container, used to resolve dependencies at runtime.
         /// </summary>
-        public static IResolver Resolver { get; internal set; }
+        internal static IResolver Resolver { get; set; }
 
         /// <summary>
         /// Indicates whether the application is running in the Unity Editor.

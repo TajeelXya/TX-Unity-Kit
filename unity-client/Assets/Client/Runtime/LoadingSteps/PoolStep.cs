@@ -3,25 +3,18 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using UnityEngine;
 using UniTx.Runtime.Bootstrap;
-using UniTx.Runtime.IoC;
 using UniTx.Runtime.Pool;
 using System;
 
 namespace Client.Runtime
 {
-    public sealed class PoolStep : LoadingStepBase, IInjectable
+    public sealed class PoolStep : LoadingStepBase
     {
         [SerializeField] private DemoOnePoolItem _itemOne;
         [SerializeField] private DemoTwoPoolItem _itemTwo;
 
         private readonly UniSpawner _spawnerOne = new();
         private readonly UniSpawner _spawnerTwo = new();
-
-        public void Inject(IResolver resolver)
-        {
-            _spawnerOne.Inject(resolver);
-            _spawnerTwo.Inject(resolver);
-        }
 
         public async override UniTask InitialiseAsync(CancellationToken cToken = default)
         {

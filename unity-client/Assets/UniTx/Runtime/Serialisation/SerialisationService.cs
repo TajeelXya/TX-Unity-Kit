@@ -1,17 +1,14 @@
 using DG.Tweening;
 using System;
 using UnityEngine;
-using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Serialisation
 {
-    public class SerialisationService : ISerialisationService, IInjectable, IInitialisable, IResettable
+    public class SerialisationService : ISerialisationService, IInitialisable, IResettable
     {
         private readonly Serialiser _serialiser = new();
 
         private Tween _saveTween;
-
-        public void Inject(IResolver resolver) => _serialiser.Inject(resolver);
 
         public void Initialise()
         {

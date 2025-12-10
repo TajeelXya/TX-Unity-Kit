@@ -4,23 +4,25 @@ using System.Threading;
 using UnityEngine;
 using UnityEngine.Networking;
 using UniTx.Runtime.Extensions;
-using UniTx.Runtime.IoC;
 using UniTx.Runtime.UnityEventListener;
 
 namespace UniTx.Runtime.Clock
 {
-    public sealed class ServerClock : IClock, IInjectable, IInitialisableAsync, IResettable
+    public sealed class ServerClock : IClock, IInitialisableAsync, IResettable
     {
+        private readonly IUnityEventListener _listener;
         private DateTime _retrievedTime;
         private double _realTimeWhenRetrieved;
-        private IUnityEventListener _listener;
         private string _timeServerUrl;
 
         public DateTime UtcNow { get; private set; }
 
         public long UnixTimestampNow { get; private set; } = 0;
 
-        public void Inject(IResolver resolver) => _listener = resolver.Resolve<IUnityEventListener>();
+        public ServerClock()
+        {
+            _listener = UniStatics.Resolver.Resolve<IUnityEventListener>();
+        }
 
         public async UniTask InitialiseAsync(CancellationToken cToken = default)
         {

@@ -21,6 +21,7 @@ namespace UniTx.Runtime.Widgets
     /// </summary>
     /// <typeparam name="TWidgetData">The type of widget data this widget uses.</typeparam>
     public abstract class UniWidgetBase<TWidgetData> : UniWidgetBase, IWidgetDataReceiver
+        where TWidgetData : IWidgetData
     {
         public TWidgetData Data { get; private set; }
 

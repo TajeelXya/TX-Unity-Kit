@@ -38,9 +38,16 @@ namespace UniTx.Runtime.Pool
             _activeItems.Clear();
         }
 
-        public virtual void SpawnOne()
+        public virtual void SpawnOne(IPoolItemData data = null)
         {
             var item = _pool.Get();
+
+            if (item is IPoolItemDataReceiver dataReceiver && data != null)
+            {
+                dataReceiver.SetData(data);
+            }
+
+            item.Initialise();
             _activeItems.Add(item.GameObject.GetInstanceID(), item);
         }
 

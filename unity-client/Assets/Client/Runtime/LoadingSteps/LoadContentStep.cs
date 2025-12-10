@@ -1,3 +1,4 @@
+using Client.Runtime.Content;
 using Cysharp.Threading.Tasks;
 using System.Linq;
 using System.Threading;
@@ -24,7 +25,7 @@ namespace Client.Runtime
             var mgDemo = _contentService.GetAllData<DemoContentData>().ToArray();
 
             await _contentLoader.UnloadContentAsync(new[] { "mg_content" }, cToken);
-            var demo = _contentService.GetAllData<DemoContentData>().ToArray();
+            var demo = _contentService.GetAllData<IDemoContentData>().ToArray();
         }
     }
 }

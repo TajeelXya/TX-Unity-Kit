@@ -22,9 +22,9 @@ namespace UniTx.Runtime.IoC
 
         public void BindAsSingleton(Type type, object instance = null)
         {
-            if (type == null)
+            if (type == null || !type.IsClass)
             {
-                UniStatics.LogInfo("Type must be a non-null type to bind.", this, Color.red);
+                UniStatics.LogInfo("Type must be a non-null class type to bind.", this, Color.red);
                 return;
             }
 

@@ -39,8 +39,8 @@ namespace UniTx.Runtime.Bootstrap
             var container = CreateContainer();
             var resolver = CreateResolver(container);
             var binder = CreateBinder(container);
-            binder.BindAsSingleton(typeof(IBinder), binder);
-            binder.BindAsSingleton(typeof(IResolver), resolver);
+            binder.BindAsSingleton(binder.GetType(), binder);
+            binder.BindAsSingleton(resolver.GetType(), resolver);
             UniStatics.Resolver = resolver.Resolve<IResolver>(); // ensure resolve
         }
     }

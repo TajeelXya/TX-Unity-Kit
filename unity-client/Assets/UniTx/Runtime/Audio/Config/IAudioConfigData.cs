@@ -13,6 +13,8 @@ namespace UniTx.Runtime.Audio
 
         bool Loop { get; }
 
+        float SpatialBlend { get; set; }
+
         float MinDistance { get; }
 
         float MaxDistance { get; }

@@ -3,32 +3,28 @@ using UniTx.Runtime.Pool;
 
 namespace UniTx.Runtime.Audio
 {
-    internal sealed class UniAudioService : IAudioService, IInitialisable, IResettable
+    internal sealed class UniAudioService : IAudioService, IInitialisable
     {
         private readonly UniSpawner _spawner = new();
 
-        private UniAudioSource _prefab;
-
         public void Initialise()
         {
-            _prefab = new GameObject("UniAudioSource").AddComponent<UniAudioSource>();
-            _spawner.SetPool(_prefab, UniStatics.Root.transform, 5);
-        }
-
-        public void Reset()
-        {
-            _spawner.ClearSpawns();
-            Object.Destroy(_prefab.gameObject);
+            var prefab = new GameObject("UniAudioSource").AddComponent<UniAudioSource>();
+            _spawner.SetPool(prefab, UniStatics.Root.transform, 5);
         }
 
         public void Play2D(IAudioConfig config)
         {
-            throw new System.NotImplementedException();
+            config.Data.SpatialBlend = 0f;
+            var data = (UniAudioConfigData)config.Data;
+            _spawner.Spawn(data);
         }
 
         public void Play3D(IAudioConfig config, Vector3 position)
         {
-            throw new System.NotImplementedException();
+            config.Data.SpatialBlend = 1f;
+            var data = (UniAudioConfigData)config.Data;
+            var source = _spawner.Spawn(data);
         }
 
         public void PlayAttached(IAudioConfig config, Transform parent)

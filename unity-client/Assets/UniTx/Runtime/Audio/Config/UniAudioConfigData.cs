@@ -31,10 +31,13 @@ namespace UniTx.Runtime.Audio
 
         public bool Loop => _loop;
 
+        public float SpatialBlend { get; set; }
+
         public float MinDistance => _minDistance;
 
         public float MaxDistance => _maxDistance;
 
         public AudioMixerGroup MixerGroup => _mixerGroup;
+
     }
 }

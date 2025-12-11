@@ -6,12 +6,6 @@ namespace UniTx.Runtime.UnityEventListener
     {
         private UnityEventListener _listener;
 
-        private void Awake()
-        {
-            DontDestroyOnLoad(this);
-            gameObject.SetActive(true);
-        }
-
         public void SetListener(UnityEventListener listener) => _listener = listener;
 
         private void Update() => _listener.BroadcastOnUpdate();

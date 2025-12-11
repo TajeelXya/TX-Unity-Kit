@@ -1,13 +1,10 @@
 using System;
 using UniTx.Runtime.Extensions;
-using UnityEngine;
 
 namespace UniTx.Runtime.UnityEventListener
 {
     public sealed class UnityEventListener : IUnityEventListener, IInitialisable, IResettable
     {
-        private UnityEventBehaviour _behaviour;
-
         public event Action OnUpdate;
         public event Action OnLateUpdate;
         public event Action OnFixedUpdate;
@@ -16,15 +13,16 @@ namespace UniTx.Runtime.UnityEventListener
 
         public void Initialise()
         {
-            var go = new GameObject("UnityEventBehaviour");
-            _behaviour = go.AddComponent<UnityEventBehaviour>();
-            _behaviour.SetListener(this);
+            var behaviour = UniStatics.Root.AddComponent<UnityEventBehaviour>();
+            behaviour.SetListener(this);
         }
 
         public void Reset()
         {
-            GameObject.Destroy(_behaviour.gameObject);
-            _behaviour = null;
+            if (UniStatics.Root.TryGetComponent<UnityEventBehaviour>(out var behaviour))
+            {
+                UnityEngine.Object.Destroy(behaviour);
+            }
         }
 
         public void BroadcastOnUpdate() => OnUpdate.Broadcast();

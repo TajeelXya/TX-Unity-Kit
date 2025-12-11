@@ -7,8 +7,11 @@ namespace UniTx.Runtime.Audio
     {
         private static IAudioService _audioService = null;
 
-        internal static void SetAudioService(IAudioService audioService)
-            => _audioService = audioService ?? throw new ArgumentNullException(nameof(audioService));
+        internal static void Initialise(IAudioService audioService)
+        {
+            _audioService = audioService ?? throw new ArgumentNullException(nameof(audioService));
+            _audioService.Initialise();
+        }
 
         public static void Play2D(IAudioConfig config)
             => _audioService.Play2D(config);

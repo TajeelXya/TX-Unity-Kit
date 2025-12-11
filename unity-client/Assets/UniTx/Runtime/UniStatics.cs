@@ -13,6 +13,8 @@ namespace UniTx.Runtime
     /// </summary>
     public static class UniStatics
     {
+        internal static GameObject Root { get; set; }
+
         internal static UniTxConfig Config { get; set; }
 
         /// <summary>

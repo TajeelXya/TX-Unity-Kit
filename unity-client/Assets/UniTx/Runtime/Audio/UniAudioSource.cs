@@ -3,10 +3,10 @@ using UniTx.Runtime.Pool;
 
 namespace UniTx.Runtime.Audio
 {
+    [RequireComponent(typeof(AudioSource))]
     internal sealed class UniAudioSource : MonoBehaviour, IPoolItem<UniAudioConfigData>
     {
-        [SerializeField] private AudioSource _source;
-
+        private AudioSource _source;
         private ISpawner _spawner;
 
         public UniAudioConfigData Data { get; private set; }
@@ -25,14 +25,21 @@ namespace UniTx.Runtime.Audio
             _source.maxDistance = Data.MaxDistance;
             _source.outputAudioMixerGroup = Data.MixerGroup;
             _source.mute = false;
+            _source.Play();
         }
 
-        public void Reset() => _source.mute = true;
+        public void Reset()
+        {
+            _source.mute = true;
+            _source.Stop();
+        }
 
         public void Return() => _spawner.Return(this);
 
         public void SetData(IPoolItemData data) => Data = (UniAudioConfigData)data;
 
         public void SetSpawner(ISpawner spawner) => _spawner = spawner;
+
+        private void Awake() => _source = GetComponent<AudioSource>();
     }
 }

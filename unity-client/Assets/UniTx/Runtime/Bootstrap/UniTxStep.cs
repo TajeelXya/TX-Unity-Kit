@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using System.Threading;
 using Unity;
 using UnityEngine;
+using UniTx.Runtime.Audio;
 using UniTx.Runtime.Events;
 using UniTx.Runtime.ResourceManagement;
 using UniTx.Runtime.IoC;
@@ -13,11 +14,13 @@ namespace UniTx.Runtime.Bootstrap
     {
         public async sealed override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
+            CreateRoot();
             LoadConfig();
             SetupIoC();
             UniEventBus.SetEventBus(CreateEventBus());
             await UniResources.InitialiseAsync(CreateResourceLoadingStrategy(), cToken);
             await UniWidgets.InitialiseAsync(CreateWidgetsManager(), cToken);
+            UniAudio.Initialise(CreateAudioService());
         }
 
         protected virtual IUnityContainer CreateContainer() => new UnityContainer();
@@ -32,7 +35,15 @@ namespace UniTx.Runtime.Bootstrap
 
         protected virtual IWidgetsManager CreateWidgetsManager() => new UniWidgetsManager();
 
+        protected virtual IAudioService CreateAudioService() => new UniAudioService();
+
         private void LoadConfig() => UniStatics.Config = Resources.Load<UniTxConfig>("UniTxConfig");
+
+        private void CreateRoot()
+        {
+            UniStatics.Root = new GameObject("UniTx - Root");
+            DontDestroyOnLoad(UniStatics.Root);
+        }
 
         private void SetupIoC()
         {

@@ -1,0 +1,22 @@
+using System;
+using UnityEngine;
+
+namespace UniTx.Runtime.Audio
+{
+    public static class UniAudio
+    {
+        private static IAudioService _audioService = null;
+
+        internal static void SetAudioService(IAudioService audioService)
+            => _audioService = audioService ?? throw new ArgumentNullException(nameof(audioService));
+
+        public static void Play2D(IAudioConfig config)
+            => _audioService.Play2D(config);
+
+        public static void Play3D(IAudioConfig config, Vector3 position)
+            => _audioService.Play3D(config, position);
+
+        public static void PlayAttached(IAudioConfig config, Transform parent)
+            => _audioService.PlayAttached(config, parent);
+    }
+}

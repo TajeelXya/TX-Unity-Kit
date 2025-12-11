@@ -1,4 +1,3 @@
-
 using UnityEngine;
 
 namespace UniTx.Runtime.Audio
@@ -10,5 +9,7 @@ namespace UniTx.Runtime.Audio
         void Play3D(IAudioConfig config, Vector3 position);
 
         void PlayAttached(IAudioConfig config, Transform parent);
+
+        void PlayMusic(IAudioConfig config);
     }
 }

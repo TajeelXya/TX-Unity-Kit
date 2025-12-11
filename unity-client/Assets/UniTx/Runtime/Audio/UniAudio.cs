@@ -18,5 +18,8 @@ namespace UniTx.Runtime.Audio
 
         public static void PlayAttached(IAudioConfig config, Transform parent)
             => _audioService.PlayAttached(config, parent);
+
+        public static void PlayMusic(IAudioConfig config)
+            => _audioService.PlayMusic(config);
     }
 }

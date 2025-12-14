@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DemoAudioConfig
   m_EditorClassIdentifier: UniTx.Runtime::UniTx.Runtime.Audio.UniAudioConfig
   _data:
-    _clip: {fileID: 0}
+    _clip: {fileID: 8300000, guid: 8f44b18faa34d3849bd740b430d22cf8, type: 3}
     _volume: 1
     _pitch: 1
     _loop: 0

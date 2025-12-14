@@ -45,8 +45,8 @@ namespace UniTx.Runtime.Audio
         {
             config.Data.SpatialBlend = 0f;
             var data = (UniAudioConfigData)config.Data;
-            _musicSource.Reset();
             _musicSource.SetData(data);
+            _musicSource.Reset();
             _musicSource.Initialise();
         }
     }

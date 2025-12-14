@@ -16,22 +16,19 @@ namespace Client.Runtime
         private readonly UniSpawner _spawnerOne = new();
         private readonly UniSpawner _spawnerTwo = new();
 
-        public async override UniTask InitialiseAsync(CancellationToken cToken = default)
+        public override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
             _spawnerOne.SetPool(_itemOne, null, 1);
             _spawnerTwo.SetPool(_itemTwo, null, 1);
 
             _spawnerOne.Spawn();
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             _spawnerOne.Spawn();
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             _spawnerTwo.Spawn(new DemoTwoPoolItemData("Hello from UniTx Pool 1."));
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             _spawnerTwo.Spawn(new DemoTwoPoolItemData("Hello from UniTx Pool 2."));
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             _spawnerOne.ClearSpawns();
-            await UniTask.Delay(TimeSpan.FromSeconds(2f), cancellationToken: cToken);
             _spawnerTwo.ClearSpawns();
+
+            return UniTask.CompletedTask;
         }
     }
 }

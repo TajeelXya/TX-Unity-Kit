@@ -48,13 +48,18 @@ namespace UniTx.Runtime.Pool
             _activeItems.Clear();
         }
 
-        public IPoolItem Spawn(IPoolItemData data = null)
+        public IPoolItem Spawn(IPoolItemData data = null, Transform spawnAt = null)
         {
             var item = _pool.Get();
 
             if (item is IPoolItemDataReceiver dataReceiver)
             {
                 dataReceiver.SetData(data);
+            }
+
+            if (spawnAt != null)
+            {
+                item.Transform.SetPositionAndRotation(spawnAt.position, spawnAt.rotation);
             }
 
             item.Initialise();

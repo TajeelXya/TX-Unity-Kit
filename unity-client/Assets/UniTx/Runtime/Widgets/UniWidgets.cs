@@ -43,7 +43,7 @@ namespace UniTx.Runtime.Widgets
         /// Asynchronously pushes a widget of the given type with data.
         /// </summary>
         public static UniTask PushAsync<TWidgetType>(IWidgetData widgetData, CancellationToken cToken = default)
-            where TWidgetType : IWidget
+            where TWidgetType : IWidget, IWidgetDataReceiver
             => _widgetsManager.PushAsync<TWidgetType>(widgetData, cToken);
 
         /// <summary>

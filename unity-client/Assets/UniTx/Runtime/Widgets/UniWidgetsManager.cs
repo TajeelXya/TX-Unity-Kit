@@ -36,38 +36,11 @@ namespace UniTx.Runtime.Widgets
 
         public UniTask PushAsync<TWidgetType>(CancellationToken cToken = default)
             where TWidgetType : IWidget
-            => PushAsync<TWidgetType>(new VoidWidgetData(), cToken);
+            => PushInternalAsync<TWidgetType>(null, cToken);
 
-        public async UniTask PushAsync<TWidgetType>(IWidgetData widgetData, CancellationToken cToken = default)
-            where TWidgetType : IWidget
-        {
-            await _semaphore.WaitAsync(cToken);
-            try
-            {
-                var widgetType = typeof(TWidgetType);
-                var asset = _assetData.GetAsset(widgetType.Name);
-                var widget = await UniResources.CreateInstanceAsync<IWidget>(asset.RuntimeKey, GetSpawnPoint(), null, cToken);
-                _stack.Push(widget);
-
-                if (widget is IWidgetDataReceiver dataReceiver)
-                {
-                    dataReceiver.SetData(widgetData);
-                }
-
-                if (widget is IInjectable injectable)
-                {
-                    injectable.Inject(_resolver);
-                }
-
-                widget.Initialise();
-                UniStatics.LogInfo($"{widgetType.Name} pushed.", this);
-                OnPush.Broadcast(widgetType);
-            }
-            finally
-            {
-                _semaphore.Release();
-            }
-        }
+        public UniTask PushAsync<TWidgetType>(IWidgetData widgetData, CancellationToken cToken = default)
+            where TWidgetType : IWidget, IWidgetDataReceiver
+            => PushInternalAsync<TWidgetType>(widgetData, cToken);
 
         public async UniTask PopWidgetsStackAsync(CancellationToken cToken = default)
         {
@@ -79,7 +52,6 @@ namespace UniTx.Runtime.Widgets
                     var widgetType = widget.GetType();
                     widget.Reset();
                     UniResources.DisposeInstance(widget.GameObject);
-                    UniStatics.LogInfo($"{widgetType.Name} popped.", this);
                     OnPop.Broadcast(widgetType);
                 }
             }
@@ -90,6 +62,36 @@ namespace UniTx.Runtime.Widgets
         }
 
         public IWidget Peek() => _stack.TryPeek(out var widget) ? widget : null;
+
+        private async UniTask PushInternalAsync<TWidgetType>(IWidgetData widgetData, CancellationToken cToken = default)
+            where TWidgetType : IWidget
+        {
+            await _semaphore.WaitAsync(cToken);
+            try
+            {
+                var widgetType = typeof(TWidgetType);
+                var asset = _assetData.GetAsset(widgetType.Name);
+                var widget = await UniResources.CreateInstanceAsync<IWidget>(asset.RuntimeKey, GetSpawnPoint(), null, cToken);
+
+                if (widget is IInjectable injectable)
+                {
+                    injectable.Inject(_resolver);
+                }
+
+                if (widgetData != null && widget is IWidgetDataReceiver dataReceiver)
+                {
+                    dataReceiver.SetData(widgetData);
+                }
+
+                widget.Initialise();
+                _stack.Push(widget);
+                OnPush.Broadcast(widgetType);
+            }
+            finally
+            {
+                _semaphore.Release();
+            }
+        }
 
         private Transform GetSpawnPoint()
         {

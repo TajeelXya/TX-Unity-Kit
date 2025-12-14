@@ -24,7 +24,6 @@ namespace UniTx.Runtime.Events
             }
 
             _subscriptions.Clear();
-            _subscriptions = null;
         }
 
         public void Subscribe<TEvent>(Action<TEvent> action, Priority priority = default)

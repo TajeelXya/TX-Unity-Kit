@@ -1,48 +1,80 @@
+using Cysharp.Threading.Tasks;
 using System;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace UniTx.Runtime.Events
 {
-    /// <summary>
-    /// Event bus for subscribing, unsubscribing, and raising value-type events.
-    /// </summary>
-    public static class UniEventBus
+    internal sealed class UniEventBus : IEventBus
     {
-        private static IEventBus _eventBus = null;
+        private IDictionary<Type, List<IListener>> _subscriptions;
+        private readonly Comparer _comparer = new();
 
-        internal static void SetEventBus(IEventBus eventBus)
-            => _eventBus = eventBus ?? throw new ArgumentNullException(nameof(eventBus));
+        public UniTask InitialiseAsync(CancellationToken cToken = default)
+        {
+            _subscriptions = new Dictionary<Type, List<IListener>>();
+            return UniTask.CompletedTask;
+        }
 
-        /// <summary>
-        /// Removes all subscriptions.
-        /// </summary>
-        public static void Reset() => _eventBus.Reset();
+        public void Reset()
+        {
+            foreach (var kvp in _subscriptions)
+            {
+                kvp.Value.Clear();
+            }
 
-        /// <summary>
-        /// Subscribes a listener to an event type with an optional priority.
-        /// </summary>
-        /// <typeparam name="TEvent">The event type to subscribe to.</typeparam>
-        /// <param name="action">The callback invoked when the event is raised.</param>
-        /// <param name="priority">Optional priority for invocation order.</param>
-        public static void Subscribe<TEvent>(Action<TEvent> action, Priority priority = default)
+            _subscriptions.Clear();
+            _subscriptions = null;
+        }
+
+        public void Subscribe<TEvent>(Action<TEvent> action, Priority priority = default)
             where TEvent : struct, IEvent
-            => _eventBus.Subscribe(action, priority);
+        {
+            var eventType = typeof(TEvent);
+            var listener = new Listener<TEvent>(action, priority);
 
-        /// <summary>
-        /// Unsubscribes a previously registered listener for the event type.
-        /// </summary>
-        /// <typeparam name="TEvent">The event type to unsubscribe from.</typeparam>
-        /// <param name="action">The callback to remove.</param>
-        public static void Unsubscribe<TEvent>(Action<TEvent> action)
-            where TEvent : struct, IEvent
-            => _eventBus.Unsubscribe(action);
+            if (_subscriptions.TryGetValue(eventType, out var listeners))
+            {
+                listeners.Add(listener);
+                listeners.Sort(_comparer);
+                return;
+            }
 
-        /// <summary>
-        /// Raises an event, invoking all subscribed listeners for its type.
-        /// </summary>
-        /// <typeparam name="TEvent">The event type being raised.</typeparam>
-        /// <param name="event">The event instance to dispatch.</param>
-        public static void Raise<TEvent>(TEvent @event)
+            _subscriptions.Add(eventType, new List<IListener> { listener });
+        }
+
+        public void Unsubscribe<TEvent>(Action<TEvent> action)
             where TEvent : struct, IEvent
-            => _eventBus.Raise(@event);
+        {
+            if (!_subscriptions.TryGetValue(typeof(TEvent), out var listeners)) return;
+
+            for (var i = 0; i < listeners.Count; i++)
+            {
+                if (listeners[i] is Listener<TEvent> typed && typed.Action == action)
+                {
+                    listeners.RemoveAt(i);
+                    if (listeners.Count > 1)
+                    {
+                        listeners.Sort(_comparer);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        public void Raise<TEvent>(TEvent @event)
+            where TEvent : struct, IEvent
+        {
+            if (!_subscriptions.TryGetValue(typeof(TEvent), out var listeners)) return;
+
+            foreach (var listener in listeners)
+            {
+                if (listener is Listener<TEvent> typed)
+                {
+                    typed.Action(@event);
+                }
+            }
+        }
     }
 }

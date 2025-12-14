@@ -1,4 +1,6 @@
+using Cysharp.Threading.Tasks;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace UniTx.Runtime.Audio
@@ -7,10 +9,10 @@ namespace UniTx.Runtime.Audio
     {
         private static IAudioService _audioService = null;
 
-        internal static void Initialise(IAudioService audioService)
+        internal static UniTask InitialiseAsync(IAudioService audioService, CancellationToken cToken = default)
         {
             _audioService = audioService ?? throw new ArgumentNullException(nameof(audioService));
-            _audioService.Initialise();
+            return _audioService.InitialiseAsync(cToken);
         }
 
         public static void Play2D(IAudioConfig config)

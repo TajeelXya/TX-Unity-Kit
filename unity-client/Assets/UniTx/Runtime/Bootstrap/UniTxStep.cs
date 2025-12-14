@@ -14,13 +14,13 @@ namespace UniTx.Runtime.Bootstrap
     {
         public async sealed override UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            CreateRoot();
+            SetupRoot();
             LoadConfig();
             SetupIoC();
-            UniEventBus.SetEventBus(CreateEventBus());
+            await UniEvents.InitialiseAsync(CreateEventBus(), cToken);
             await UniResources.InitialiseAsync(CreateResourceLoadingStrategy(), cToken);
             await UniWidgets.InitialiseAsync(CreateWidgetsManager(), cToken);
-            UniAudio.Initialise(CreateAudioService());
+            await UniAudio.InitialiseAsync(CreateAudioService(), cToken);
         }
 
         protected virtual IUnityContainer CreateContainer() => new UnityContainer();
@@ -29,7 +29,7 @@ namespace UniTx.Runtime.Bootstrap
 
         protected virtual IBinder CreateBinder(IUnityContainer container) => new UniBinder(container);
 
-        protected virtual IEventBus CreateEventBus() => new PriorityEventBus();
+        protected virtual IEventBus CreateEventBus() => new UniEventBus();
 
         protected virtual IResourceLoadingStrategy CreateResourceLoadingStrategy() => new AddressablesLoadingStrategy();
 
@@ -39,7 +39,7 @@ namespace UniTx.Runtime.Bootstrap
 
         private void LoadConfig() => UniStatics.Config = Resources.Load<UniTxConfig>("UniTxConfig");
 
-        private void CreateRoot()
+        private void SetupRoot()
         {
             UniStatics.Root = new GameObject("UniTx - Root");
             DontDestroyOnLoad(UniStatics.Root);

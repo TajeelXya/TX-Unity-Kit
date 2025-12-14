@@ -1,16 +1,19 @@
+using Cysharp.Threading.Tasks;
+using System.Threading;
 using UnityEngine;
 using UniTx.Runtime.Pool;
 
 namespace UniTx.Runtime.Audio
 {
-    internal sealed class UniAudioService : IAudioService, IInitialisable
+    internal sealed class UniAudioService : IAudioService
     {
         private readonly UniSpawner _spawner = new();
 
-        public void Initialise()
+        public UniTask InitialiseAsync(CancellationToken cToken = default)
         {
             var prefab = new GameObject("UniAudioSource").AddComponent<UniAudioSource>();
             _spawner.SetPool(prefab, UniStatics.Root.transform, 5);
+            return UniTask.CompletedTask;
         }
 
         public void Play2D(IAudioConfig config)

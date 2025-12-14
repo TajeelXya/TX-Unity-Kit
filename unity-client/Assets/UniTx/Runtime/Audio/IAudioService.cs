@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace UniTx.Runtime.Audio
 {
-    public interface IAudioService : IInitialisable
+    public interface IAudioService : IInitialisableAsync
     {
         void Play2D(IAudioConfig config);
 

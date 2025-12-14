@@ -5,7 +5,7 @@ namespace UniTx.Runtime.Events
     /// <summary>
     /// Event bus interface for subscribing, unsubscribing, and raising value-type events.
     /// </summary>
-    public interface IEventBus : IResettable
+    public interface IEventBus : IInitialisableAsync, IResettable
     {
         /// <summary>
         /// Subscribes a listener to an event type with an optional priority.

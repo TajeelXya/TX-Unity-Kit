@@ -6,7 +6,7 @@ namespace Client.Runtime.Pool
 {
     public sealed class DemoOnePoolItem : MonoBehaviour, IPoolItem
     {
-        private ISpawner _spawner;
+        private IPoolReturner _returner;
 
         public GameObject GameObject => gameObject;
 
@@ -22,8 +22,8 @@ namespace Client.Runtime.Pool
             UniStatics.LogInfo("Reset", this, Color.darkOliveGreen);
         }
 
-        public void Return() => _spawner.Return(this);
+        public void Return() => _returner.Return(this);
 
-        public void SetSpawner(ISpawner spawner) => _spawner = spawner;
+        public void SetPoolReturner(IPoolReturner returner) => _returner = returner;
     }
 }

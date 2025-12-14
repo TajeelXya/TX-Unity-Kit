@@ -31,7 +31,7 @@ namespace UniTx.Runtime.Audio
 
         public bool Loop => _loop;
 
-        public float SpatialBlend { get; set; }
+        public float SpatialBlend { get; set; } = 0f;
 
         public float MinDistance => _minDistance;
 
@@ -39,5 +39,6 @@ namespace UniTx.Runtime.Audio
 
         public AudioMixerGroup MixerGroup => _mixerGroup;
 
+        public Transform ToFollow { get; set; } = null;
     }
 }

@@ -2,7 +2,7 @@ namespace UniTx.Runtime.Pool
 {
     public interface IPoolItem : IInitialisable, IResettable, ISceneEntity
     {
-        void SetSpawner(ISpawner spawner);
+        void SetPoolReturner(IPoolReturner returner);
 
         void Return();
     }

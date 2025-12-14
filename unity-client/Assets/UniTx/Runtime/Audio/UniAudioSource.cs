@@ -7,7 +7,8 @@ namespace UniTx.Runtime.Audio
     internal sealed class UniAudioSource : MonoBehaviour, IPoolItem<UniAudioConfigData>
     {
         private AudioSource _source;
-        private ISpawner _spawner;
+        private IPoolReturner _returner;
+        private Transform _toFollow;
 
         public UniAudioConfigData Data { get; private set; }
 
@@ -24,22 +25,31 @@ namespace UniTx.Runtime.Audio
             _source.minDistance = Data.MinDistance;
             _source.maxDistance = Data.MaxDistance;
             _source.outputAudioMixerGroup = Data.MixerGroup;
+            _toFollow = Data.ToFollow;
             _source.mute = false;
             _source.Play();
         }
 
         public void Reset()
         {
+            _toFollow = Data.ToFollow = null;
             _source.mute = true;
             _source.Stop();
         }
 
-        public void Return() => _spawner.Return(this);
+        public void Return() => _returner.Return(this);
 
         public void SetData(IPoolItemData data) => Data = (UniAudioConfigData)data;
 
-        public void SetSpawner(ISpawner spawner) => _spawner = spawner;
+        public void SetPoolReturner(IPoolReturner returner) => _returner = returner;
 
         private void Awake() => _source = GetComponent<AudioSource>();
+
+        private void LateUpdate()
+        {
+            if (_toFollow == null) return;
+
+            transform.SetPositionAndRotation(_toFollow.position, _toFollow.rotation);
+        }
     }
 }

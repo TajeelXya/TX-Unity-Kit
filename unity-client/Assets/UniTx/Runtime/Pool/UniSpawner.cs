@@ -6,7 +6,7 @@ using UniTx.Runtime.IoC;
 
 namespace UniTx.Runtime.Pool
 {
-    public sealed class UniSpawner : ISpawner
+    public sealed class UniSpawner : IPoolReturner
     {
         private readonly IDictionary<int, IPoolItem> _activeItems;
         private readonly IResolver _resolver;
@@ -48,24 +48,19 @@ namespace UniTx.Runtime.Pool
             _activeItems.Clear();
         }
 
-        public IPoolItem Spawn(IPoolItemData data = null, Transform spawnAt = null)
+        public void Spawn(IPoolItemData data = null, Vector3 spawnPosition = default, Quaternion spawnRotation = default)
         {
             var item = _pool.Get();
 
-            if (item is IPoolItemDataReceiver dataReceiver)
+            item.Transform.SetPositionAndRotation(spawnPosition, spawnRotation);
+
+            if (data != null && item is IPoolItemDataReceiver dataReceiver)
             {
                 dataReceiver.SetData(data);
             }
 
-            if (spawnAt != null)
-            {
-                item.Transform.SetPositionAndRotation(spawnAt.position, spawnAt.rotation);
-            }
-
             item.Initialise();
             _activeItems.Add(item.GameObject.GetInstanceID(), item);
-
-            return item;
         }
 
         private Func<IPoolItem> CreateFunc(IPoolItem prefab, Transform parent)
@@ -74,7 +69,7 @@ namespace UniTx.Runtime.Pool
             {
                 var go = GameObject.Instantiate(prefab.GameObject, parent);
                 var item = go.GetComponent<IPoolItem>();
-                item.SetSpawner(this);
+                item.SetPoolReturner(this);
 
                 if (item is IInjectable injectable)
                 {

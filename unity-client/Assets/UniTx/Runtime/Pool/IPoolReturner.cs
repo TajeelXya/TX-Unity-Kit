@@ -1,6 +1,6 @@
 namespace UniTx.Runtime.Pool
 {
-    public interface ISpawner
+    public interface IPoolReturner
     {
         void Return(IPoolItem item);
     }

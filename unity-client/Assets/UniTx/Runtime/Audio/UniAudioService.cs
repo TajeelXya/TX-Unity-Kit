@@ -8,11 +8,14 @@ namespace UniTx.Runtime.Audio
     internal sealed class UniAudioService : IAudioService
     {
         private readonly UniSpawner _spawner = new();
+        private UniAudioSource _musicSource;
 
         public UniTask InitialiseAsync(CancellationToken cToken = default)
         {
-            var prefab = new GameObject("UniAudioSource").AddComponent<UniAudioSource>();
-            _spawner.SetPool(prefab, UniStatics.Root.transform, 5);
+            var root = UniStatics.Root.transform;
+            _musicSource = new GameObject("UniAudioSource").AddComponent<UniAudioSource>();
+            _musicSource.Transform.SetParent(root);
+            _spawner.SetPool(_musicSource, root, 5);
             return UniTask.CompletedTask;
         }
 
@@ -27,17 +30,24 @@ namespace UniTx.Runtime.Audio
         {
             config.Data.SpatialBlend = 1f;
             var data = (UniAudioConfigData)config.Data;
-            var source = _spawner.Spawn(data);
+            _spawner.Spawn(data, position);
         }
 
         public void PlayAttached(IAudioConfig config, Transform parent)
         {
-            throw new System.NotImplementedException();
+            config.Data.SpatialBlend = 1f;
+            var data = (UniAudioConfigData)config.Data;
+            data.ToFollow = parent;
+            _spawner.Spawn(data, parent.position, parent.rotation);
         }
 
         public void PlayMusic(IAudioConfig config)
         {
-            throw new System.NotImplementedException();
+            config.Data.SpatialBlend = 0f;
+            var data = (UniAudioConfigData)config.Data;
+            _musicSource.Reset();
+            _musicSource.SetData(data);
+            _musicSource.Initialise();
         }
     }
 }

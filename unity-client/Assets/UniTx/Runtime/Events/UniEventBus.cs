@@ -8,11 +8,12 @@ namespace UniTx.Runtime.Events
     internal sealed class UniEventBus : IEventBus
     {
         private IDictionary<Type, List<IListener>> _subscriptions;
-        private readonly Comparer _comparer = new();
+        private Comparer _comparer;
 
         public UniTask InitialiseAsync(CancellationToken cToken = default)
         {
             _subscriptions = new Dictionary<Type, List<IListener>>();
+            _comparer = new();
             return UniTask.CompletedTask;
         }
 
